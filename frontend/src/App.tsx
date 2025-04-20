@@ -1,4 +1,4 @@
-import { useConnectionStatus } from "./hooks/useConnectionStatus";
+import { useConnectionStatus } from "@hooks/useConnectionStatus";
 
 function App() {
   const isConnected = useConnectionStatus();
