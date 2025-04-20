@@ -26,7 +26,9 @@ export const useConnectionStatus = () => {
     };
 
     return () => {
-      ws.close();
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     };
   }, []);
 
