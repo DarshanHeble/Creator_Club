@@ -27,7 +27,7 @@
    git clone https://github.com/DarshanHeble/Creator_Club.git
    ```
 
-   I recommend you to clone this project using github desktop
+   I recommend you to clone this project using github desktop.
 
 2. **Open the Project in Your IDE:**
    - Open the cloned repository in your preferred IDE (e.g., Visual Studio Code, PyCharm).

@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+html,
+body,
+#root,
+.app {
+  height: -webkit-fill-available;
+}

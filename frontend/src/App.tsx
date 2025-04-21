@@ -1,10 +1,11 @@
+import { ThemeSwitcher } from "@components/ThemeSwitcher";
 import { useConnectionStatus } from "@hooks/useConnectionStatus";
 
 function App() {
   const isConnected = useConnectionStatus();
 
   return (
-    <div className="app">
+    <div className="app dark:bg-zinc-800 bg-zinc-200">
       <div
         className={`connection-status ${
           isConnected ? "connected" : "disconnected"
@@ -12,6 +13,7 @@ function App() {
       >
         Backend is {isConnected ? "Connected" : "Disconnected"}
       </div>
+      <ThemeSwitcher />
     </div>
   );
 }
