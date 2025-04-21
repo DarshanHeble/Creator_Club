@@ -10,7 +10,6 @@ const Header = () => {
       <div>Backend is {isConnected ? "Connected" : "Disconnected"}</div>
       <nav className="flex gap-4">
         <Link to="/">Landing</Link>
-        <Link to="/welcome">Welcome</Link>
         <Link to="/login">Login</Link>
       </nav>
       <ThemeSwitcher />
