@@ -10,7 +10,7 @@ import { ThemeProvider } from "next-themes";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider attribute={"class"}>
-      <Theme accentColor="sky">
+      <Theme accentColor="plum">
         <App />
       </Theme>
     </ThemeProvider>
