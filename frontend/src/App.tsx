@@ -1,20 +1,19 @@
-import { ThemeSwitcher } from "@components/ThemeSwitcher";
-import { useConnectionStatus } from "@hooks/useConnectionStatus";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Landing } from "./pages/Landing";
+import { Login } from "./pages/Login";
+import Header from "@components/Header";
 
 function App() {
-  const isConnected = useConnectionStatus();
-
   return (
-    <div className="app">
-      <div
-        className={`connection-status ${
-          isConnected ? "connected" : "disconnected"
-        }`}
-      >
-        Backend is {isConnected ? "Connected" : "Disconnected"}
+    <BrowserRouter>
+      <Header />
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
       </div>
-      <ThemeSwitcher />
-    </div>
+    </BrowserRouter>
   );
 }
 
