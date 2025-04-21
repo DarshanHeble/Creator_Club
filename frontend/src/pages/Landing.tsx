@@ -19,9 +19,9 @@ export function Landing() {
           </Button>
         </div>
       </div>
-      <div className="h-[93vh] w-full relative ">
+      <div className="h-[93vh] w-full relative overflow-hidden">
         <Spline scene="https://prod.spline.design/0tinqLr4b8UmLGHR/scene.splinecode" />
-        <div className="w-[10rem] h-[2.5rem] absolute z-50 left-[48.5rem] top-[41.5rem] bg-white dark:bg-black"></div>
+        <div className="w-[12rem] h-[4rem] fixed z-50 left-[87vw] top-[88.5vh] bg-white dark:bg-[#121113]"></div>
       </div>
     </div>
   );
