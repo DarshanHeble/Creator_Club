@@ -5,7 +5,7 @@ function App() {
   const isConnected = useConnectionStatus();
 
   return (
-    <div className="app dark:bg-zinc-800 bg-zinc-200">
+    <div className="app">
       <div
         className={`connection-status ${
           isConnected ? "connected" : "disconnected"

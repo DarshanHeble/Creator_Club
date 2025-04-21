@@ -20,8 +20,9 @@ export const ThemeSwitcher = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" size="2">
+        <Button variant="outline" className="flex justify-center items-center">
           {getThemeIcon()}
+          <span className="capitalize font-normal">{themeMode}</span>
         </Button>
       </DropdownMenu.Trigger>
 
@@ -31,21 +32,21 @@ export const ThemeSwitcher = () => {
           sideOffset={5}
         >
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
+            className="flex text-black dark:text-white items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
             onSelect={() => setTheme("light")}
           >
             <BsSun size={14} />
             Light
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
+            className="flex text-black dark:text-white items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
             onSelect={() => setTheme("dark")}
           >
             <BsMoon size={14} />
             Dark
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
+            className="flex text-black dark:text-white items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
             onSelect={() => setTheme("system")}
           >
             <BsDisplay size={14} />
