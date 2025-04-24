@@ -17,20 +17,20 @@ export function Landing() {
   return (
     <div className="flex justify-around relative">
       <motion.div
-        className="flex flex-col relative left-[10rem] py-[10rem] w-[60rem] gap-3"
+        className="flex flex-col relative left-[9rem] max-xl:left-[6rem] max-lg:left-[5rem] max-md:left-[3rem] max-sm:left-[2rem] py-[8rem] w-[62rem] gap-3 z-30 pointer-events-none "
         initial="hidden"
         animate="visible"
         transition={{ staggerChildren: 0.3, delayChildren: 0.5 }}
       >
         <motion.h1
-          className="pointer-none select-none font-extrabold text-8xl"
+          className="pointer-events-none select-none font-extrabold text-8xl max-lg:text-7xl max-md:text-4xl max-sm:text-2xl"
           variants={contentVariants}
           transition={{ duration: 1, ease: "easeOut" }}
         >
           Welcome to Creator Club
         </motion.h1>
         <motion.p
-          className="pointer-none select-none"
+          className="pointer-events-none select-none"
           variants={contentVariants}
           transition={{ duration: 1, ease: "easeOut" }}
         >
@@ -39,6 +39,7 @@ export function Landing() {
         <motion.div
           variants={contentVariants}
           transition={{ duration: 1, ease: "easeOut" }}
+          className="pointer-events-auto"
         >
           <Button size={"4"} radius="full" className="">
             Get started
@@ -46,7 +47,7 @@ export function Landing() {
           </Button>
         </motion.div>
       </motion.div>
-      <div className="h-[93vh] w-full relative overflow-hidden">
+      <div className="h-[93vh] w-full relative max-md:absolute overflow-hidden">
         <Suspense>
           <motion.div
             className="h-full w-full"
@@ -60,7 +61,7 @@ export function Landing() {
             />
           </motion.div>
         </Suspense>
-        <div className="w-[12rem] h-[4rem] fixed z-50 left-[87vw] top-[88.5vh] bg-white dark:bg-[#121113]"></div>
+        <div className="w-[12rem] h-[4rem] fixed z-20 left-[87vw] top-[88.5vh] bg-white dark:bg-[#121113]"></div>
       </div>
     </div>
   );
