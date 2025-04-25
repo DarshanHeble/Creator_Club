@@ -1,11 +1,12 @@
-import { Box, Container, Flex, Heading, Text } from "@radix-ui/themes";
+import { Avatar, Box, Heading, Text } from "@radix-ui/themes";
 import { useAccount } from "wagmi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Connect } from "@components/Connect";
 import { motion } from "framer-motion";
+import { FaGoogleWallet } from "react-icons/fa6";
 
-export function Login() {
+function Login() {
   const { isConnected } = useAccount();
   const navigate = useNavigate();
 
@@ -16,25 +17,63 @@ export function Login() {
   }, [isConnected, navigate]);
 
   return (
-    <Container className="h-[90vh] flex items-center justify-center">
-      <Flex className="w-full items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md flex items-center justify-center"
-        >
-          <Box className="h-full bg-white dark:bg-zinc-900 p-8 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800">
-            <Heading className="text-3xl font-bold text-center mb-6">
+    <div className="h-full flex justify-center items-center">
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
+        className="w-full max-w-md flex items-center justify-center"
+      >
+        <Box className="">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="grid place-items-center mb-4"
+          >
+            <Avatar
+              fallback={<FaGoogleWallet className="text-6xl" />}
+              radius="full"
+              color="cyan"
+              variant="solid"
+              size={"6"}
+              highContrast
+              className=""
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <Heading className="text-3xl font-bold text-center">
               Connect Wallet
             </Heading>
-            <Text className="text-zinc-600 dark:text-zinc-400 text-center mb-8">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <Text
+              as="p"
+              mb="3"
+              size="3"
+              className="text-zinc-600 dark:text-zinc-400 text-center"
+            >
               Connect your wallet to access the dashboard
             </Text>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
             <Connect />
-          </Box>
-        </motion.div>
-      </Flex>
-    </Container>
+          </motion.div>
+        </Box>
+      </motion.div>
+    </div>
   );
 }
+
+export default Login;

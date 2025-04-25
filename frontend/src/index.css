@@ -4,9 +4,12 @@
 
 html,
 body,
-#root,
-.app {
+#root {
   height: -webkit-fill-available;
+}
+
+.app {
+  height: calc(100vh - 3.5rem);
 }
 
 .radix-themes {

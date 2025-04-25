@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Landing } from "./pages/Landing";
-import { Login } from "./pages/Login";
 import Header from "@components/Header";
-import DashBoard from "./pages/DashBoard";
+import Landing from "@pages/Landing";
+import Login from "@pages/Login";
+import DashBoard from "@pages/DashBoard";
+import "./index.css";
 
 function App() {
   return (

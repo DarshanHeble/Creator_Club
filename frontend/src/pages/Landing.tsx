@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 // Lazy load and memoize the Spline component
 const LazySpline = memo(lazy(() => import("@splinetool/react-spline")));
 
-export function Landing() {
+function Landing() {
   const [isSplineLoaded, setIsSplineLoaded] = useState(false);
 
   const contentVariants = {
@@ -66,3 +66,5 @@ export function Landing() {
     </div>
   );
 }
+
+export default memo(Landing);

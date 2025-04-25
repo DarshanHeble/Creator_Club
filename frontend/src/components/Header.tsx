@@ -11,6 +11,7 @@ const Header = () => {
       <nav className="flex gap-4">
         <Link to="/">Home</Link>
         <Link to="/login">Login</Link>
+        <Link to="/dashboard">Dashboard</Link>
       </nav>
       <ThemeSwitcher />
     </div>
