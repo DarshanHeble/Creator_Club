@@ -1,11 +1,15 @@
 from fastapi import APIRouter
 
+# Create a router instance for basic HTTP endpoints
 router = APIRouter()
 
+
 @router.get("/")
-async def root():
+async def root() -> dict:
     """
-    Root endpoint to verify backend server status
-    Returns a simple message indicating the server is running
+    Root endpoint that serves as a health check and API information point.
+
+    Returns:
+        dict: A simple message indicating the API is running and its purpose
     """
-    return {"message": "Creator Club Backend is Running Successfully"}
+    return {"message": "Welcome to Creator Club API", "status": "running"}
