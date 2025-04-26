@@ -1,4 +1,4 @@
-import { Avatar, Box, Heading, Text } from "@radix-ui/themes";
+import { Avatar, Box, Heading, Text, Link } from "@radix-ui/themes";
 import { useAccount } from "wagmi";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,64 @@ function Login() {
   }, [isConnected, navigate]);
 
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-around">
+      {/* <div className="relative h-[400px] w-[400px] overflow-hidden">
+        <motion.div
+          initial={{ x: -100, y: 100, opacity: 0 }}
+          animate={{ x: 200, y: -200, opacity: 1 }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+          }}
+          className="absolute bottom-0 left-0 text-xl font-bold text-purple-600"
+        >
+          Seamless Rewards
+        </motion.div>
+        <motion.div
+          initial={{ x: 200, y: -200, opacity: 0 }}
+          animate={{ x: -100, y: 100, opacity: 1 }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+            delay: 1,
+          }}
+          className="absolute top-0 right-0 text-xl font-bold text-blue-600"
+        >
+          Meaningful Connections
+        </motion.div>
+        <motion.div
+          initial={{ x: -100, y: 100, opacity: 0 }}
+          animate={{ x: 200, y: -200, opacity: 1 }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+            delay: 2,
+          }}
+          className="absolute bottom-0 left-0 text-xl font-bold text-teal-600"
+        >
+          Empower Creators
+        </motion.div>
+        <motion.div
+          initial={{ x: 200, y: -200, opacity: 0 }}
+          animate={{ x: -100, y: 100, opacity: 1 }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+            delay: 3,
+          }}
+          className="absolute top-0 right-0 text-xl font-bold text-indigo-600"
+        >
+          Web3 Innovation
+        </motion.div>
+      </div> */}
       <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
@@ -69,6 +126,43 @@ function Login() {
             transition={{ duration: 0.5, delay: 0.8 }}
           >
             <Connect />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.0 }}
+          >
+            <Text
+              as="p"
+              size="2"
+              mt="3"
+              className="text-center text-zinc-500 dark:text-zinc-400"
+            >
+              Don't have a wallet?{" "}
+              <Link
+                href="https://metamask.io/download/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className=""
+              >
+                Install MetaMask
+              </Link>
+            </Text>
+            <Text
+              as="p"
+              size="2"
+              className="mt-2 text-center text-zinc-500 dark:text-zinc-400"
+            >
+              New to Web3? Follow our{" "}
+              <Link
+                href="https://support.metamask.io/start/getting-started-with-metamask/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className=""
+              >
+                guide to set up your first wallet
+              </Link>
+            </Text>
           </motion.div>
         </Box>
       </motion.div>

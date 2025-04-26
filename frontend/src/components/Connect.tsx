@@ -74,10 +74,10 @@ function ConnectorButton({
         <img src={MetaMaskSvg} alt="M" className="w-full" />
       ) : (
         <>
-          <img src={WalletConnectSvg} alt="W" className="w-full p-2.5" />
+          <img src={WalletConnectSvg} alt="W" className="z-[1] w-full p-2.5" />
           {isLoading && (
-            <div className="absolute grid h-full w-full place-items-center">
-              <Spinner className="" />
+            <div className="absolute top-4 left-0 z-10 flex h-full w-full justify-center">
+              <Spinner size="3" className="z-10" />
             </div>
           )}
         </>
