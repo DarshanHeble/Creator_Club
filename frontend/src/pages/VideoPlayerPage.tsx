@@ -1,18 +1,11 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Text,
-} from "@radix-ui/themes";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { FaPlay, FaPause, FaHeart } from "react-icons/fa";
+import { useState } from "react";
 
 const VideoPlayerPage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const { title, url, channel } = location.state || {}; // Get video details from navigation state
 
   const [isPlaying, setIsPlaying] = useState(true);
@@ -38,14 +31,14 @@ const VideoPlayerPage = () => {
         <Heading size="4">{title}</Heading>
 
         {/* Video Player */}
-        <Box className="w-full h-64 bg-black rounded-lg overflow-hidden">
+        <div className="w-full h-64 bg-black rounded-lg overflow-hidden">
           <iframe
             src={url}
             title={title}
             className="w-full h-full"
             allowFullScreen
           ></iframe>
-        </Box>
+        </div>
 
         {/* Video Controls */}
         <Flex gap="4">

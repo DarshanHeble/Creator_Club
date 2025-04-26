@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/themes";
 import { Account } from "@components/Account";
 import { useAccount, useDisconnect } from "wagmi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaPowerOff, FaPlay } from "react-icons/fa";
 
@@ -36,24 +36,31 @@ const DashBoard = () => {
     }
   }, [isConnected, navigate]);
 
+  const openVideoPage = (video: { title: string; url: string; channel: string }) => {
+    navigate("/video", { state: video });
+  };
+
   const videos = [
     {
       id: 1,
       title: "Introduction to Creator Club",
       thumbnail: thumbnail1 || defaultThumbnail,
-      url: "https://www.example.com/video1", // Replace with actual video URL
+      url: "https://www.youtube.com/watch?v=oROwuFMkNc0&ab_channel=ZakirKhan",
+      channel: "Creator Club Official",
     },
     {
       id: 2,
       title: "How to Collaborate with Creators",
-      thumbnail: thumbnail2, // Local image
-      url: "https://www.example.com/video2", // Replace with actual video URL
+      thumbnail: thumbnail2,
+      url: "https://www.example.com/video2",
+      channel: "Collaboration Hub",
     },
     {
       id: 3,
       title: "Tips for Growing Your Audience",
-      thumbnail: thumbnail3, // Local image
-      url: "https://www.example.com/video3", // Replace with actual video URL
+      thumbnail: thumbnail3,
+      url: "https://www.example.com/video3",
+      channel: "Audience Growth Tips",
     },
   ];
 
@@ -72,7 +79,9 @@ const DashBoard = () => {
       <Flex direction="column" gap="6" className="relative py-8">
         {/* Main Dashboard Content */}
         <Flex justify="between" align="center">
-          <Heading>Dashboard</Heading>
+          <Heading>
+            <Link to="/dashboard">Dashboard</Link>
+          </Heading>
           <Button
             variant="soft"
             color="red"
@@ -98,11 +107,11 @@ const DashBoard = () => {
         <Heading size="4" className="mt-8">
           Recommended Videos
         </Heading>
-        <Grid columns="3" gap="6">
+        <Flex wrap="wrap" gap="6" className="justify-start">
           {videos.map((video) => (
             <Box
               key={video.id}
-              className="rounded-lg border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+              className="flex flex-col rounded-lg border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900 w-full sm:w-[48%] lg:w-[30%]"
             >
               <img
                 src={video.thumbnail}
@@ -113,15 +122,15 @@ const DashBoard = () => {
               <Button
                 variant="soft"
                 color="blue"
-                className="flex items-center gap-2"
-                onClick={() => openModal(video)}
+                className="flex items-center gap-2 mt-auto"
+                onClick={() => openVideoPage(video)}
               >
                 <FaPlay />
                 Watch Now
               </Button>
             </Box>
           ))}
-        </Grid>
+        </Flex>
       </Flex>
 
       {/* Video Modal */}
