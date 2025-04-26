@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "@components/Header";
 import Landing from "@pages/Landing";
@@ -7,15 +6,9 @@ import DashBoard from "@pages/DashBoard";
 import "./index.css";
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
     <BrowserRouter>
-      <Header onMenuToggle={toggleMenu} />
+      <Header />
       <div className="app">
         <Routes>
           <Route path="/" element={<Landing />} />

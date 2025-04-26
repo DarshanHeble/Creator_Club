@@ -30,8 +30,10 @@ const Header = () => {
         {/* Navigation Links */}
         <nav className="flex gap-4">
           <Link to="/">Home</Link>
-          {!isConnected && <Link to="/login">Login</Link>} {/* Show Login if not connected */}
-          {isConnected && <Link to="/dashboard">Dashboard</Link>} {/* Show Dashboard if connected */}
+          {!isConnected && <Link to="/login">Login</Link>}{" "}
+          {/* Show Login if not connected */}
+          {isConnected && <Link to="/dashboard">Dashboard</Link>}{" "}
+          {/* Show Dashboard if connected */}
         </nav>
 
         {/* Theme Switcher */}

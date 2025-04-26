@@ -8,7 +8,7 @@ import WalletConnectSvg from "../assets/WalletConnect.svg";
 
 export function Connect() {
   const chainId = useChainId();
-  const { connectors, connect } = useConnect();
+  const { connectors, connect, status } = useConnect();
 
   // Filter only MetaMask and WalletConnect connectors
   const filteredConnectors = connectors.filter(
@@ -16,6 +16,10 @@ export function Connect() {
       connector.name.toLowerCase().includes("metamask") ||
       connector.name.toLowerCase().includes("walletconnect")
   );
+
+  useEffect(() => {
+    console.log(status);
+  }, [status]);
 
   return (
     <Grid columns="2" gap="3" width="100%">
