@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Card, Grid, Text } from "@radix-ui/themes";
+import { Card, Grid, Spinner, Text } from "@radix-ui/themes";
 import { Connector, useChainId, useConnect } from "wagmi";
 import { motion } from "framer-motion";
 import { cn } from "@utils/index";
-import MetaMaskSvg from "../assets/MetaMask.svg";
-import WalletConnectSvg from "../assets/WalletConnect.svg";
+import MetaMaskSvg from "@assets/MetaMask.svg";
+import WalletConnectSvg from "@assets/WalletConnect.svg";
 
 export function Connect() {
   const chainId = useChainId();
@@ -14,7 +14,7 @@ export function Connect() {
   const filteredConnectors = connectors.filter(
     (connector) =>
       connector.name.toLowerCase().includes("metamask") ||
-      connector.name.toLowerCase().includes("walletconnect")
+      connector.name.toLowerCase().includes("walletconnect"),
   );
 
   useEffect(() => {
@@ -29,12 +29,13 @@ export function Connect() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.2 }}
-          className="w-full h-full"
+          className="h-full w-full"
           // style={{ width: "100%" }}
         >
           <ConnectorButton
             connector={connector}
             onClick={() => connect({ connector, chainId })}
+            isLoading={status === "pending"}
           />
         </motion.div>
       ))}
@@ -45,9 +46,11 @@ export function Connect() {
 function ConnectorButton({
   connector,
   onClick,
+  isLoading,
 }: {
   connector: Connector;
   onClick: () => void;
+  isLoading: boolean;
 }) {
   const [ready, setReady] = useState(false);
 
@@ -62,16 +65,22 @@ function ConnectorButton({
     <Card
       size="4"
       className={cn(
-        "p-6 h-full flex flex-col justify-start gap-3 transition-all cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800",
-        !ready && "opacity-50 cursor-not-allowed"
+        "flex h-full cursor-pointer flex-col justify-start gap-3 p-6 transition-all hover:bg-zinc-200 dark:hover:bg-zinc-800",
+        !ready && "relative cursor-not-allowed opacity-50",
       )}
       onClick={ready ? onClick : undefined}
     >
       {connector.name.toLowerCase().includes("metamask") ? (
         <img src={MetaMaskSvg} alt="M" className="w-full" />
       ) : (
-        // <SiWalletconnect className="text-6xl" />
-        <img src={WalletConnectSvg} alt="W" className="w-full p-2.5" />
+        <>
+          <img src={WalletConnectSvg} alt="W" className="w-full p-2.5" />
+          {isLoading && (
+            <div className="absolute grid h-full w-full place-items-center">
+              <Spinner className="" />
+            </div>
+          )}
+        </>
       )}
       <Text as="p" className="text-center">
         {connector.name}

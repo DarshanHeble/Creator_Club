@@ -17,18 +17,18 @@ function Login() {
   }, [isConnected, navigate]);
 
   return (
-    <div className="h-full flex justify-center items-center">
+    <div className="flex h-full items-center justify-center">
       <motion.div
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        className="w-full max-w-md flex items-center justify-center"
+        className="flex w-full max-w-md items-center justify-center"
       >
         <Box className="">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid place-items-center mb-4"
+            className="mb-4 grid place-items-center"
           >
             <Avatar
               fallback={<FaGoogleWallet className="text-6xl" />}
@@ -45,7 +45,7 @@ function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Heading className="text-3xl font-bold text-center">
+            <Heading className="text-center text-3xl font-bold">
               Connect Wallet
             </Heading>
           </motion.div>
@@ -58,9 +58,9 @@ function Login() {
               as="p"
               mb="3"
               size="3"
-              className="text-zinc-600 dark:text-zinc-400 text-center"
+              className="text-center text-zinc-600 dark:text-zinc-400"
             >
-              Connect your wallet to access the dashboard
+              Connect your wallet to access the Dashboard
             </Text>
           </motion.div>
           <motion.div

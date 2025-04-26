@@ -69,7 +69,7 @@ const DashBoard = () => {
 
   return (
     <Container>
-      <Flex direction="column" gap="6" className="py-8 relative">
+      <Flex direction="column" gap="6" className="relative py-8">
         {/* Main Dashboard Content */}
         <Flex justify="between" align="center">
           <Heading>Dashboard</Heading>
@@ -86,8 +86,8 @@ const DashBoard = () => {
 
         {/* Account Information */}
         <Grid columns="2" gap="4">
-          <Box className="bg-white dark:bg-zinc-900 p-6 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800">
-            <Text className="text-zinc-600 dark:text-zinc-400 mb-4">
+          <Box className="rounded-lg border border-zinc-200 bg-white p-6 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+            <Text className="mb-4 text-zinc-600 dark:text-zinc-400">
               Your Account Information
             </Text>
             <Account />
@@ -102,14 +102,14 @@ const DashBoard = () => {
           {videos.map((video) => (
             <Box
               key={video.id}
-              className="bg-white dark:bg-zinc-900 p-4 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800"
+              className="rounded-lg border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
             >
               <img
                 src={video.thumbnail}
                 alt={video.title}
-                className="rounded-lg mb-4"
+                className="mb-4 rounded-lg"
               />
-              <Text className="font-bold text-lg mb-2">{video.title}</Text>
+              <Text className="mb-2 text-lg font-bold">{video.title}</Text>
               <Button
                 variant="soft"
                 color="blue"
@@ -126,8 +126,8 @@ const DashBoard = () => {
 
       {/* Video Modal */}
       {isModalOpen && selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-zinc-900 p-6 rounded-lg shadow-lg w-[90%] max-w-3xl">
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="w-[90%] max-w-3xl rounded-lg bg-white p-6 shadow-lg dark:bg-zinc-900">
             <Flex justify="between" align="center" className="mb-4">
               <Heading size="4">{selectedVideo.title}</Heading>
               <Button
@@ -142,7 +142,7 @@ const DashBoard = () => {
             <iframe
               src={selectedVideo.url}
               title={selectedVideo.title}
-              className="w-full h-64 rounded-lg"
+              className="h-64 w-full rounded-lg"
               allowFullScreen
             ></iframe>
           </div>
