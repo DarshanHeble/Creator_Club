@@ -1,6 +1,5 @@
-"use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
