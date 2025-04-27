@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import base, websocket
 from app.routes.user import create_user, update_user, delete_user
+from app.routes.user.list_users import router as list_users_router
+
 
 frontend_url = "http://localhost:5173"
 
@@ -31,3 +33,4 @@ app.include_router(websocket.router)  # WebSocket routes (/ws/*)
 app.include_router(create_user.router, prefix="/users")
 app.include_router(update_user.router, prefix="/users")
 app.include_router(delete_user.router, prefix="/users")
+app.include_router(list_users_router, prefix="/users", tags=["Users"])
