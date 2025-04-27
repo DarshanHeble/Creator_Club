@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import websocket, base
+from app.routes.user import create_router, update_router, delete_router
 
 # Initialize FastAPI application instance
 app = FastAPI()
@@ -20,3 +21,7 @@ app.add_middleware(
 # Include routers from separate files
 app.include_router(websocket.router)
 app.include_router(base.router)
+
+app.include_router(create_router, prefix="/users", tags=["users"])
+app.include_router(update_router, prefix="/users", tags=["users"])
+app.include_router(delete_router, prefix="/users", tags=["users"])
