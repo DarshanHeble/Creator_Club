@@ -6,12 +6,8 @@ import Login from "@pages/Login";
 import Landing from "@pages/Landing";
 import VideoPlayerPage from "@pages/VideoPlayerPage";
 import "./index.css";
-import { useConnectionStatus } from "@hooks/useConnectionStatus";
 
 function App() {
-  const isConnected = useConnectionStatus();
-  console.log("Connection status:", isConnected);
-
   return (
     <BrowserRouter>
       <div className="flex h-screen">

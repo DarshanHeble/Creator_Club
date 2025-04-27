@@ -1,8 +1,4 @@
 venv
 __pycache__
 .env
-<<<<<<< HEAD
 backend/app/serviceAccountKey.json
-=======
-serviceAccountKey.json
->>>>>>> c59e4d6956530227e7016e184bf70286c1ad40fa

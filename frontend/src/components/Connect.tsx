@@ -30,14 +30,12 @@ export function Connect() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.2 }}
           className="h-full w-full"
+          // style={{ width: "100%" }}
         >
           <ConnectorButton
             connector={connector}
             onClick={() => connect({ connector, chainId })}
-            isLoading={
-              status === "pending" &&
-              connector.name.toLowerCase().includes("walletconnect")
-            }
+            isLoading={status === "pending"}
           />
         </motion.div>
       ))}
@@ -45,17 +43,15 @@ export function Connect() {
   );
 }
 
-export interface ConnectorButtonProps {
-  connector: Connector;
-  onClick: () => void;
-  isLoading: boolean;
-}
-
 function ConnectorButton({
   connector,
   onClick,
   isLoading,
-}: ConnectorButtonProps) {
+}: {
+  connector: Connector;
+  onClick: () => void;
+  isLoading: boolean;
+}) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {

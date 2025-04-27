@@ -20,33 +20,33 @@ export const ThemeSwitcher = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button variant="outline" className="flex items-center justify-center">
+        <Button variant="outline" className="flex justify-center items-center">
           {getThemeIcon()}
-          <span className="font-normal capitalize">{themeMode}</span>
+          <span className="capitalize font-normal">{themeMode}</span>
         </Button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[120px] rounded-md bg-white p-1 shadow-md dark:bg-zinc-800"
+          className="min-w-[120px] bg-white dark:bg-zinc-800 rounded-md p-1 shadow-md"
           sideOffset={5}
         >
           <DropdownMenu.Item
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
+            className="flex text-black dark:text-white items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
             onSelect={() => setTheme("light")}
           >
             <BsSun size={14} />
             Light
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
+            className="flex text-black dark:text-white items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
             onSelect={() => setTheme("dark")}
           >
             <BsMoon size={14} />
             Dark
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
+            className="flex text-black dark:text-white items-center gap-2 px-2 py-1.5 text-sm outline-none cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded"
             onSelect={() => setTheme("system")}
           >
             <BsDisplay size={14} />
