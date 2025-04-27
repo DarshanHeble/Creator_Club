@@ -3,7 +3,7 @@ export type User = {
   walletAddress: string;
   userName?: string;
   email?: string;
-  password: string;
+  password?: string;
   isCreator: boolean;
 };
 
