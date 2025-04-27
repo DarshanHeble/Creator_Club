@@ -8,3 +8,14 @@ export type User = {
 };
 
 // export type userRole = "creator" | "fan";
+
+export type ApiError = {
+  message: string;
+  statusCode: number;
+  details?: string;
+};
+
+export type ServiceResponse<T> = {
+  data?: T;
+  error?: ApiError;
+};
