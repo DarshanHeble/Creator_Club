@@ -17,7 +17,7 @@ async def delete_user(user_id: str):
 
     Raises:
         HTTPException: If the user doesn't exist (404)
-                      or if there's a database error (500)
+                        or if there's a database error (500)
     """
     try:
         # Verify user exists before deletion

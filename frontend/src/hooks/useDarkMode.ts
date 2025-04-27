@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-
-type ThemeMode = "light" | "dark" | "system";
+import { Theme } from "../types";
 
 const useDarkMode = () => {
-  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+  const [themeMode, setThemeMode] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem("theme");
-    return (savedTheme as ThemeMode) || "system";
+    return (savedTheme as Theme) || "system";
   });
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -30,13 +29,13 @@ const useDarkMode = () => {
   }, [themeMode]);
 
   // Set theme mode
-  const setTheme = useCallback((mode: ThemeMode) => {
+  const setTheme = useCallback((mode: Theme) => {
     setThemeMode(mode);
     localStorage.setItem("theme", mode);
 
     if (mode === "system") {
       const isSystemDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        "(prefers-color-scheme: dark)",
       ).matches;
       setIsDarkMode(isSystemDark);
     } else {
