@@ -7,4 +7,4 @@ export type User = {
   isCreator: boolean;
 };
 
-export type userRole = "creator" | "fan";
+// export type userRole = "creator" | "fan";
