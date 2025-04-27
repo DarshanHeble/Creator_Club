@@ -1,14 +1,13 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.websockets import WebSocketDisconnect
-import asyncio
+from app.routes import websocket, base
 
-# Initialize FastAPI app
+# Initialize FastAPI application instance
 app = FastAPI()
 
 frontend_url = "http://localhost:5173"
 
-# CORS configuration (update the allowed origins as needed)
+# Configure CORS middleware to handle cross-origin requests
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,19 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.websocket("/ws/connection-status")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        while True:
-            # Send a heartbeat message every few seconds
-            await websocket.send_json({"status": "connected"})
-            await asyncio.sleep(5)  # Send status every 5 seconds
-    except WebSocketDisconnect:
-        pass
-
-
-@app.get("/")
-async def root():
-    return {"message": "Creator Club Backend is Running Successfully"}
+# Include routers from separate files
+app.include_router(websocket.router)
+app.include_router(base.router)
