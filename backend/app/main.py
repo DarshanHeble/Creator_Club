@@ -1,14 +1,19 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import websocket, base
-from app.routes.users import create_router, update_router, delete_router
+from app.routes.users import (
+    create_router,
+    update_router,
+    delete_router,
+    username_router,
+)
 
 # Initialize FastAPI application instance
 app = FastAPI()
 
 frontend_url = "http://localhost:5173"
 
-# Configure CORS middleware to handle cross-origin requests
+# Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,10 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers from separate files
+# Include routers
 app.include_router(websocket.router)
 app.include_router(base.router)
 
+# Mount user-related routers
 app.include_router(create_router, prefix="/users", tags=["users"])
 app.include_router(update_router, prefix="/users", tags=["users"])
 app.include_router(delete_router, prefix="/users", tags=["users"])
+app.include_router(username_router, prefix="/users", tags=["users"])
