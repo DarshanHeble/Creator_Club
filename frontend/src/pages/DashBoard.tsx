@@ -64,10 +64,7 @@ const DashBoard = () => {
     },
   ];
 
-  const openModal = (video: { title: string; url: string }) => {
-    setSelectedVideo(video);
-    setIsModalOpen(true);
-  };
+  // Removed unused openModal function
 
   const closeModal = () => {
     setIsModalOpen(false);

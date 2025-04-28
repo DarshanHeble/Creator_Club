@@ -2,7 +2,6 @@
 
 import { Link } from "react-router-dom";
 import { ThemeSwitcher } from "./ThemeSwitcher";
-import Sidebar from "./Sidebar"; // Import the new Sidebar component
 
 const Header = () => {
   return (
@@ -19,9 +18,6 @@ const Header = () => {
         {/* Theme Switcher */}
         <ThemeSwitcher />
       </div>
-
-      {/* Sidebar */}
-      <Sidebar />
     </div>
   );
 };

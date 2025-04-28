@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -28,25 +27,11 @@ const Sidebar = () => {
     },
   ];
 
-  const [open, setOpen] = useState(true);
-
   return (
-    <div
-      className={`${
-        open ? "w-64" : "w-20"
-      } h-screen bg-zinc-50 dark:bg-zinc-900 transition-all duration-300 flex flex-col shadow-lg`}
-    >
+    <div className="w-64 h-screen bg-zinc-50 dark:bg-zinc-900 flex flex-col shadow-lg">
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between p-4">
-        <div className="text-lg font-bold text-neutral-700 dark:text-neutral-200">
-          {open ? "Creator Club" : "CC"}
-        </div>
-        <button
-          className="text-neutral-700 dark:text-neutral-200"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? "Close" : "Open"}
-        </button>
+      <div className="p-4 text-lg font-bold text-neutral-700 dark:text-neutral-200">
+        Creator Club
       </div>
 
       {/* Sidebar Links */}
@@ -58,7 +43,7 @@ const Sidebar = () => {
             className="flex items-center gap-4 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-gray-200 dark:text-neutral-200 dark:hover:bg-neutral-700 rounded-md"
           >
             {link.icon}
-            {open && <span>{link.label}</span>}
+            <span>{link.label}</span>
           </Link>
         ))}
       </nav>
@@ -71,16 +56,14 @@ const Sidebar = () => {
             alt="Avatar"
             className="h-10 w-10 rounded-full"
           />
-          {open && (
-            <div>
-              <p className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
-                Manu Arora
-              </p>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                Creator
-              </p>
-            </div>
-          )}
+          <div>
+            <p className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+              Manu Arora
+            </p>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              Creator
+            </p>
+          </div>
         </div>
       </div>
     </div>
