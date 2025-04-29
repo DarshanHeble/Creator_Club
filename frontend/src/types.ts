@@ -4,18 +4,9 @@ export type User = {
   userName?: string;
   email?: string;
   password?: string;
-  isCreator: boolean;
+  role: userRole;
+  favoriteCreators: string[];
+  websiteURL: string;
 };
 
-// export type userRole = "creator" | "fan";
-
-export type ApiError = {
-  message: string;
-  statusCode: number;
-  details?: string;
-};
-
-export type ServiceResponse<T> = {
-  data?: T;
-  error?: ApiError;
-};
+export type userRole = "creator" | "fan";
