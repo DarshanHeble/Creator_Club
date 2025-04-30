@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUser } from "../services/api"; // Use the createUser API function
+import axios from "axios"; // Import axios for API calls
 import bcrypt from "bcryptjs";
 import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+
+const createUser = async (data: { userName: string; email: string; password: string; walletAddress: string; isCreator: boolean }) => {
+  return axios.post('/users', data);
+};
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,6 +23,18 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
     try {
       // Hash the password before sending it to the backend
       const hashedPassword = await bcrypt.hash(formData.password, 10);
@@ -52,7 +68,7 @@ const Register = () => {
           Register
         </Heading>
         {error && (
-          <Text className="mb-4 text-center text-sm text-red-500 bg-red-100 p-2 rounded-lg dark:bg-red-900">
+          <Text className="mb-4 text-center text-sm text-red-500 bg-red-100 border border-red-500 p-3 rounded-lg dark:bg-red-900">
             {error}
           </Text>
         )}
@@ -107,7 +123,7 @@ const Register = () => {
               type="submit"
               variant="soft"
               color="blue"
-              className="w-full py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-800"
+              className="w-full py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition-all"
             >
               Register
             </Button>

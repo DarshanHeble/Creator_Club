@@ -5,6 +5,7 @@ import DashBoard from "@pages/DashBoard";
 import Login from "@pages/Login";
 import Register from "@pages/Register";
 import Landing from "@pages/Landing";
+import Profile from "@pages/profile";
 import VideoPlayerPage from "@pages/VideoPlayerPage";
 import { useAccount } from "wagmi"; // Import wagmi to track login status
 import "./index.css";
@@ -24,12 +25,13 @@ function App() {
           <Header />
 
           {/* Routes */}
-          <div className={isConnected ? "mt-14" : ""}>
+          <div className={isConnected ? "mt" : ""}>
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<DashBoard />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/video" element={<VideoPlayerPage />} />
             </Routes>
           </div>
