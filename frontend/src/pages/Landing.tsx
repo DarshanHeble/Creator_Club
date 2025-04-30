@@ -52,8 +52,8 @@ function Landing() {
             <Button
               size={"4"}
               radius="full"
-              onClick={() => {
-                login();
+              onClick={async () => {
+                await login();
                 if (authenticated) {
                   navigate(`/user/${user?.id}/dashboard`);
                 }

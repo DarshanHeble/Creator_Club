@@ -7,6 +7,7 @@ import Landing from "@pages/Landing";
 import "./index.css";
 import UserLayout from "@components/layout/UserLayout";
 import Profile from "@pages/profile";
+import Settings from "@pages/Settings";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<DashBoard />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
             {/* <Route path="/video" element={<VideoPlayerPage />} /> */}
           </Route>
         </Routes>

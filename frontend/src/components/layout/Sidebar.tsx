@@ -1,27 +1,29 @@
 "use client";
 
+import { usePrivy } from "@privy-io/react-auth";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
+  const { user } = usePrivy();
   const links = [
     {
       label: "Dashboard",
-      href: "/dashboard",
+      href: `/user/${user?.id}/dashboard`,
       icon: (
         <FaHome className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
       label: "Profile",
-      href: "/profile",
+      href: `/user/${user?.id}/profile`,
       icon: (
         <FaUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
       label: "Settings",
-      href: "/settings",
+      href: `/user/${user?.id}/settings`,
       icon: (
         <FaCog className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
