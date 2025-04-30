@@ -1,22 +1,30 @@
-"use client";
-
 import { Link } from "react-router-dom";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { Button } from "@radix-ui/themes";
+import { useLogin, usePrivy } from "@privy-io/react-auth";
 
 const Header = () => {
+  const { ready, authenticated } = usePrivy();
+  const { login } = useLogin();
+
   return (
     <div className="relative">
-      {/* Header Bar */}
-      <div className="flex justify-between h-14 items-center px-4 py-2 bg-zinc-50 dark:bg-zinc-900">
+      <div className="flex h-14 items-center justify-between bg-zinc-50 px-4 py-2 dark:bg-zinc-900">
         {/* Navigation Links */}
-        <nav className="hidden md:flex gap-4">
+        <nav className="hidden gap-4 md:flex">
           <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
           <Link to="/dashboard">Dashboard</Link>
         </nav>
 
-        {/* Theme Switcher */}
-        <ThemeSwitcher />
+        <div className="flex gap-4">
+          {ready && !authenticated && (
+            <Button variant="outline" onClick={login}>
+              Login
+            </Button>
+          )}
+          {/* Theme Switcher */}
+          <ThemeSwitcher />
+        </div>
       </div>
     </div>
   );
