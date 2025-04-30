@@ -201,6 +201,7 @@ const Quests = () => {
                     onClick={() => handleAddQuest(quest)}
                   >
                     <Text className="mb-2 font-semibold">{quest.title}</Text>
+                    <br />
                     <Text className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
                       {quest.description}
                     </Text>
