@@ -8,8 +8,8 @@ import { Theme } from "@radix-ui/themes";
 import { ThemeProvider } from "next-themes";
 
 import { PrivyProvider } from "@privy-io/react-auth";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(

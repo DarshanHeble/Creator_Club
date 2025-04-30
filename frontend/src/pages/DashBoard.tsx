@@ -17,11 +17,13 @@ import { FaPowerOff, FaPlay } from "react-icons/fa";
 import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
+import { useLogout } from "@privy-io/react-auth";
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {
   // const { isConnected } = useAccount();
   // const { disconnect } = useDisconnect();
+  const { logout } = useLogout();
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,7 +92,10 @@ const DashBoard = () => {
           <Button
             variant="soft"
             color="red"
-            // onClick={() => disconnect()}
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
             className="flex items-center gap-2"
           >
             <FaPowerOff />
