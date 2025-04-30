@@ -8,6 +8,7 @@ import "./index.css";
 import UserLayout from "@components/layout/UserLayout";
 import Profile from "@pages/profile";
 import Settings from "@pages/Settings";
+import Quests from "@pages/Quests";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/user/:userId" element={<UserLayout />}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<DashBoard />} />
+            <Route path="quests" element={<Quests />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
             {/* <Route path="/video" element={<VideoPlayerPage />} /> */}

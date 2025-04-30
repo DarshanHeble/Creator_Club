@@ -1,7 +1,8 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import { FaCog, FaSignOutAlt, FaTasks } from "react-icons/fa";
+import { RxDashboard } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -11,14 +12,14 @@ const Sidebar = () => {
       label: "Dashboard",
       href: `/user/${user?.id}/dashboard`,
       icon: (
-        <FaHome className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        <RxDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
-      label: "Profile",
-      href: `/user/${user?.id}/profile`,
+      label: "Quests",
+      href: `/user/${user?.id}/quests`,
       icon: (
-        <FaUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        <FaTasks className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
@@ -60,7 +61,10 @@ const Sidebar = () => {
 
       {/* Footer */}
       <div className="mt-auto p-4">
-        <div className="flex items-center gap-4">
+        <Link
+          to={`/user/${user?.id}/profile`}
+          className="flex items-center gap-4"
+        >
           <img
             src="https://assets.aceternity.com/manu.png"
             alt="Avatar"
@@ -74,7 +78,7 @@ const Sidebar = () => {
               Creator
             </p>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );
