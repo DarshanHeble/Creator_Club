@@ -1,18 +1,18 @@
-"use client";
-
 import { usePrivy } from "@privy-io/react-auth";
-import { FaCog, FaSignOutAlt, FaTasks } from "react-icons/fa";
-import { RxDashboard } from "react-icons/rx";
-import { Link } from "react-router-dom";
+import { FaCog, FaTasks, FaSignOutAlt } from "react-icons/fa";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
-  const { user } = usePrivy();
+  const { user, logout } = usePrivy();
+  const location = useLocation();
+
   const links = [
     {
       label: "Dashboard",
       href: `/user/${user?.id}/dashboard`,
       icon: (
-        <RxDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        <TbLayoutDashboardFilled className="h-6 w-6 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
@@ -29,41 +29,53 @@ const Sidebar = () => {
         <FaCog className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
-    {
-      label: "Logout",
-      href: "/logout",
-      icon: (
-        <FaSignOutAlt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
-    },
   ];
 
   return (
-    <div className="flex h-full w-64 flex-col bg-zinc-50 shadow-lg dark:bg-zinc-900">
+    <div className="flex h-full w-64 flex-col bg-zinc-50 px-2 shadow-lg dark:bg-zinc-900">
       {/* Sidebar Header */}
       <div className="p-4 text-lg font-bold text-neutral-700 dark:text-neutral-200">
         Creator Club
       </div>
 
       {/* Sidebar Links */}
-      <nav className="mt-4 flex flex-col gap-4">
-        {links.map((link, idx) => (
-          <Link
-            key={idx}
-            to={link.href}
-            className="flex items-center gap-4 rounded-md px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-gray-200 dark:text-neutral-200 dark:hover:bg-neutral-700"
-          >
-            {link.icon}
-            <span>{link.label}</span>
-          </Link>
-        ))}
+      <nav className="mt-4 flex flex-col gap-2">
+        {links.map((link, idx) => {
+          const isActive = location.pathname === link.href;
+          return (
+            <Link
+              key={idx}
+              to={link.href}
+              className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium transition-colors ${
+                isActive
+                  ? "text-primary-600 dark:text-primary-400 bg-gray-200 dark:bg-neutral-800"
+                  : "text-neutral-800 hover:bg-gray-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              }`}
+            >
+              {link.icon}
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Footer */}
-      <div className="mt-auto p-4">
+      <div className="mt-auto flex flex-col gap-2">
+        <button
+          onClick={logout}
+          className="flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-gray-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+        >
+          <FaSignOutAlt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+          <span>Logout</span>
+        </button>
+
         <Link
           to={`/user/${user?.id}/profile`}
-          className="flex items-center gap-4"
+          className={`mb-3 flex items-center gap-4 rounded-2xl px-2 py-1 transition-colors ${
+            location.pathname === `/user/${user?.id}/profile`
+              ? "text-primary-600 dark:text-primary-400 bg-gray-200 dark:bg-neutral-800"
+              : "hover:bg-gray-200 dark:hover:bg-neutral-800"
+          }`}
         >
           <img
             src="https://assets.aceternity.com/manu.png"
@@ -71,7 +83,13 @@ const Sidebar = () => {
             className="h-10 w-10 rounded-full"
           />
           <div>
-            <p className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+            <p
+              className={`text-sm font-medium ${
+                location.pathname === `/user/${user?.id}/profile`
+                  ? "text-primary-600 dark:text-primary-400"
+                  : "text-neutral-700 dark:text-neutral-200"
+              }`}
+            >
               Manu Arora
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
