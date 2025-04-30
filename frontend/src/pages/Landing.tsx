@@ -10,7 +10,11 @@ const LazySpline = memo(lazy(() => import("@splinetool/react-spline")));
 
 function Landing() {
   const { ready, authenticated, user } = usePrivy();
-  const { login } = useLogin();
+  const { login } = useLogin({
+    onComplete() {
+      navigate(`/user/${user?.id}/dashboard`);
+    },
+  });
   const navigate = useNavigate();
   const [isSplineLoaded, setIsSplineLoaded] = useState(false);
 
@@ -54,9 +58,6 @@ function Landing() {
               radius="full"
               onClick={async () => {
                 await login();
-                if (authenticated) {
-                  navigate(`/user/${user?.id}/dashboard`);
-                }
               }}
             >
               Get started
