@@ -2,7 +2,7 @@ import { User } from "src/types";
 import api from "./api";
 
 export const userService = {
-  async createUser(user: Omit<User, "id">): Promise<User> {
+  async createUser(user: User): Promise<User> {
     try {
       const response = await api.post<User>("/users/create", user);
       return response.data;

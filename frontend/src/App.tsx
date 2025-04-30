@@ -8,7 +8,6 @@ import VideoPlayerPage from "@pages/VideoPlayerPage";
 import "./index.css";
 
 function App() {
-
   return (
     <BrowserRouter>
       <Header />
