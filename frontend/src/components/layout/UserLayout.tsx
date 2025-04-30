@@ -6,9 +6,9 @@ const UserLayout = () => {
   console.log(userId);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full w-full">
       <Sidebar />
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-scroll">
         <Outlet />
       </div>
     </div>

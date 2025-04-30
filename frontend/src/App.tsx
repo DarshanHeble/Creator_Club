@@ -13,7 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div className="flex h-[calc(100vh-3.5rem)]">
+      <div className="flex h-[calc(100vh-3.5rem)] w-full">
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Landing />} />
