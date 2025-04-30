@@ -26,7 +26,7 @@ const Profile = () => {
     console.log("Saved data:", formData);
     setIsEditing(false);
   };
-
+// profile
   return (
     <Flex
       direction="column"
