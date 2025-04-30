@@ -6,24 +6,19 @@ import Login from "@pages/Login";
 import Register from "@pages/Register";
 import Landing from "@pages/Landing";
 import VideoPlayerPage from "@pages/VideoPlayerPage";
-import { useAccount } from "wagmi"; // Import wagmi to track login status
+import CloudinaryUpload from "../CloudinaryUpload";
+import { useAccount } from "wagmi";
 import "./index.css";
 
 function App() {
-  const { isConnected } = useAccount(); // Check if the user is logged in
+  const { isConnected } = useAccount();
 
   return (
     <BrowserRouter>
       <div className="flex h-screen">
-        {/* Conditionally Render Sidebar */}
         {isConnected && <Sidebar />}
-
-        {/* Main Content */}
         <div className="flex-1">
-          {/* Header */}
           <Header />
-
-          {/* Routes */}
           <div className={isConnected ? "mt-14" : ""}>
             <Routes>
               <Route path="/" element={<Landing />} />
@@ -31,6 +26,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<DashBoard />} />
               <Route path="/video" element={<VideoPlayerPage />} />
+              <Route path="/cloudinary-upload" element={<CloudinaryUpload />} />
             </Routes>
           </div>
         </div>
