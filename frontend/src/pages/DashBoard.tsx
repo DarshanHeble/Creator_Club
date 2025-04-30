@@ -7,21 +7,23 @@ import {
   Heading,
   Text,
 } from "@radix-ui/themes";
-import { Account } from "@components/Account";
-import { useAccount, useDisconnect } from "wagmi";
+// import { Account } from "@components/Account";
+// import { useAccount, useDisconnect } from "wagmi";
 import { useNavigate, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaPowerOff, FaPlay } from "react-icons/fa";
 
 // Import local images
 import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
+import { useLogout } from "@privy-io/react-auth";
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {
-  const { isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+  // const { isConnected } = useAccount();
+  // const { disconnect } = useDisconnect();
+  const { logout } = useLogout();
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,13 +32,17 @@ const DashBoard = () => {
     url: string;
   } | null>(null);
 
-  useEffect(() => {
-    if (!isConnected) {
-      navigate("/login");
-    }
-  }, [isConnected, navigate]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigate("/login");
+  //   }
+  // }, [isConnected, navigate]);
 
-  const openVideoPage = (video: { title: string; url: string; channel: string }) => {
+  const openVideoPage = (video: {
+    title: string;
+    url: string;
+    channel: string;
+  }) => {
     navigate("/video", { state: video });
   };
 
@@ -64,6 +70,10 @@ const DashBoard = () => {
     },
   ];
 
+  // const openModal = (video: { title: string; url: string }) => {
+  //   setSelectedVideo(video);
+  //   setIsModalOpen(true);
+  // };
   // Removed unused openModal function
 
   const closeModal = () => {
@@ -82,7 +92,10 @@ const DashBoard = () => {
           <Button
             variant="soft"
             color="red"
-            onClick={() => disconnect()}
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
             className="flex items-center gap-2"
           >
             <FaPowerOff />
@@ -96,7 +109,7 @@ const DashBoard = () => {
             <Text className="mb-4 text-zinc-600 dark:text-zinc-400">
               Your Account Information
             </Text>
-            <Account />
+            {/* <Account /> */}
           </Box>
         </Grid>
 
@@ -108,7 +121,7 @@ const DashBoard = () => {
           {videos.map((video) => (
             <Box
               key={video.id}
-              className="flex flex-col rounded-lg border border-zinc-200 bg-white p-4 shadow-lg dark:border-zinc-800 dark:bg-zinc-900 w-full sm:w-[48%] lg:w-[30%]"
+              className="flex w-full flex-col rounded-lg border border-zinc-200 bg-white p-4 shadow-lg sm:w-[48%] lg:w-[30%] dark:border-zinc-800 dark:bg-zinc-900"
             >
               <img
                 src={video.thumbnail}
@@ -119,7 +132,7 @@ const DashBoard = () => {
               <Button
                 variant="soft"
                 color="blue"
-                className="flex items-center gap-2 mt-auto"
+                className="mt-auto flex items-center gap-2"
                 onClick={() => openVideoPage(video)}
               >
                 <FaPlay />

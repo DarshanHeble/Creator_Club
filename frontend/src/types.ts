@@ -5,8 +5,8 @@ export type User = {
   email?: string;
   password?: string;
   role: userRole;
-  favoriteCreators: string[];
-  websiteURL: string;
+  favoriteCreators?: string[];
+  websiteURL?: string;
 };
 
 export type userRole = "creator" | "fan";

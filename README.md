@@ -64,7 +64,7 @@
 
 4. **Start the FastAPI server:**
    ```powershell
-uvicorn app.main:app --reload   
+   uvicorn app.main:app --reload
    ```
    This will start the server on `http://127.0.0.1:8000` by default.
 

@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import axios from "axios"; // Import axios for API calls
+=======
+>>>>>>> e1acb295409ba3f3df07ee3404c7cd62feca064e
 import bcrypt from "bcryptjs";
 import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+// import { userService } from "@services/userService";
 
 const createUser = async (data: { userName: string; email: string; password: string; walletAddress: string; isCreator: boolean }) => {
   return axios.post('/users', data);
@@ -40,13 +44,13 @@ const Register = () => {
       const hashedPassword = await bcrypt.hash(formData.password, 10);
 
       // Send the data to the backend
-      await createUser({
-        userName: formData.userName,
-        email: formData.email,
-        password: hashedPassword,
-        walletAddress: "", // Optional, can be updated later
-        isCreator: false, // Default value
-      });
+      // await userService.updateUser({
+      //   userName: formData.userName,
+      //   email: formData.email,
+      //   password: hashedPassword,
+      //   walletAddress: "",
+      //   role: "fan",
+      // });
 
       // Redirect to the login page after successful registration
       navigate("/login");
@@ -63,19 +67,29 @@ const Register = () => {
       justify="center"
       className="h-screen bg-gradient-to-br from-blue-100 to-blue-300 dark:from-neutral-800 dark:to-neutral-900"
     >
-      <Box className="w-full max-w-lg p-8 bg-white rounded-lg shadow-xl dark:bg-zinc-900">
-        <Heading size="4" className="mb-6 text-center text-2xl font-bold text-zinc-800 dark:text-zinc-200">
+      <Box className="w-full max-w-lg rounded-lg bg-white p-8 shadow-xl dark:bg-zinc-900">
+        <Heading
+          size="4"
+          className="mb-6 text-center text-2xl font-bold text-zinc-800 dark:text-zinc-200"
+        >
           Register
         </Heading>
         {error && (
+<<<<<<< HEAD
           <Text className="mb-4 text-center text-sm text-red-500 bg-red-100 border border-red-500 p-3 rounded-lg dark:bg-red-900">
+=======
+          <Text className="mb-4 rounded-lg bg-red-100 p-2 text-center text-sm text-red-500 dark:bg-red-900">
+>>>>>>> e1acb295409ba3f3df07ee3404c7cd62feca064e
             {error}
           </Text>
         )}
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap="5">
             <div>
-              <label htmlFor="userName" className="block mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label
+                htmlFor="userName"
+                className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              >
                 Username
               </label>
               <input
@@ -86,11 +100,14 @@ const Register = () => {
                 value={formData.userName}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
             <div>
-              <label htmlFor="email" className="block mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              >
                 Email
               </label>
               <input
@@ -101,11 +118,14 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              >
                 Password
               </label>
               <input
@@ -116,14 +136,18 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
             <Button
               type="submit"
               variant="soft"
               color="blue"
+<<<<<<< HEAD
               className="w-full py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition-all"
+=======
+              className="w-full rounded-lg bg-blue-500 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-neutral-800"
+>>>>>>> e1acb295409ba3f3df07ee3404c7cd62feca064e
             >
               Register
             </Button>
