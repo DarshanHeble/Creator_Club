@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "@components/Sidebar";
-import Header from "@components/Header";
+import Header from "./components/Header";
 import DashBoard from "@pages/DashBoard";
-// import Login from "@pages/Login";
+import Register from "@pages/Register";
 import Landing from "@pages/Landing";
 import VideoPlayerPage from "@pages/VideoPlayerPage";
 import "./index.css";
 
 function App() {
+
   return (
     <BrowserRouter>
       <Header />
@@ -20,6 +21,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/header" element={<Header />} />
             {/* <Route path="/login" element={<Login />} /> */}
+            <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<DashBoard />} />
             <Route path="/video" element={<VideoPlayerPage />} />
           </Routes>

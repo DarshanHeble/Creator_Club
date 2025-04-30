@@ -72,6 +72,7 @@ const DashBoard = () => {
   //   setSelectedVideo(video);
   //   setIsModalOpen(true);
   // };
+  // Removed unused openModal function
 
   const closeModal = () => {
     setIsModalOpen(false);
