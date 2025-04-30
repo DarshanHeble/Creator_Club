@@ -9,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 const LazySpline = memo(lazy(() => import("@splinetool/react-spline")));
 
 function Landing() {
-  const { ready, authenticated } = usePrivy();
+  const { ready, authenticated, user } = usePrivy();
   const { login } = useLogin();
   const navigate = useNavigate();
   const [isSplineLoaded, setIsSplineLoaded] = useState(false);
+
+  // useEffect(() => {}, [authenticated]);
 
   const contentVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -47,7 +49,16 @@ function Landing() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="pointer-events-auto"
           >
-            <Button size={"4"} radius="full" onClick={login}>
+            <Button
+              size={"4"}
+              radius="full"
+              onClick={() => {
+                login();
+                if (authenticated) {
+                  navigate(`/user/${user?.id}/dashboard`);
+                }
+              }}
+            >
               Get started
               <FaArrowRight />
             </Button>
@@ -61,7 +72,7 @@ function Landing() {
             <Button
               size={"4"}
               radius="full"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate(`/user/${user?.id}/dashboard`)}
             >
               Get started
               <FaArrowRight />

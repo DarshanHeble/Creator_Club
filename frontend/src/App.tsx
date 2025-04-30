@@ -1,30 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Sidebar from "@components/Sidebar";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import DashBoard from "@pages/DashBoard";
 import Register from "@pages/Register";
 import Landing from "@pages/Landing";
-import VideoPlayerPage from "@pages/VideoPlayerPage";
+// import VideoPlayerPage from "@pages/VideoPlayerPage";
 import "./index.css";
+import UserLayout from "@components/layout/UserLayout";
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div className="flex h-screen">
-        <Sidebar />
+      <div className="flex h-[calc(100vh-3.5rem)]">
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Main Content */}
-        <div className="flex-1">
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/header" element={<Header />} />
-            {/* <Route path="/login" element={<Login />} /> */}
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<DashBoard />} />
-            <Route path="/video" element={<VideoPlayerPage />} />
-          </Routes>
-        </div>
+          {/* Protected routes with sidebar */}
+          <Route path="/user/:userId" element={<UserLayout />}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<DashBoard />} />
+            {/* <Route path="/video" element={<VideoPlayerPage />} /> */}
+          </Route>
+        </Routes>
       </div>
     </BrowserRouter>
   );
