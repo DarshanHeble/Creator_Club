@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import axios from "axios"; // Import axios for API calls
-=======
->>>>>>> e1acb295409ba3f3df07ee3404c7cd62feca064e
 import bcrypt from "bcryptjs";
 import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
 // import { userService } from "@services/userService";
 
-const createUser = async (data: { userName: string; email: string; password: string; walletAddress: string; isCreator: boolean }) => {
-  return axios.post('/users', data);
+const createUser = async (data: {
+  userName: string;
+  email: string;
+  password: string;
+  walletAddress: string;
+  isCreator: boolean;
+}) => {
+  return axios.post("/users", data);
 };
 
 const Register = () => {
@@ -75,11 +78,8 @@ const Register = () => {
           Register
         </Heading>
         {error && (
-<<<<<<< HEAD
-          <Text className="mb-4 text-center text-sm text-red-500 bg-red-100 border border-red-500 p-3 rounded-lg dark:bg-red-900">
-=======
+          // <Text className="mb-4 text-center text-sm text-red-500 bg-red-100 border border-red-500 p-3 rounded-lg dark:bg-red-900">
           <Text className="mb-4 rounded-lg bg-red-100 p-2 text-center text-sm text-red-500 dark:bg-red-900">
->>>>>>> e1acb295409ba3f3df07ee3404c7cd62feca064e
             {error}
           </Text>
         )}
@@ -143,11 +143,7 @@ const Register = () => {
               type="submit"
               variant="soft"
               color="blue"
-<<<<<<< HEAD
-              className="w-full py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition-all"
-=======
               className="w-full rounded-lg bg-blue-500 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-neutral-800"
->>>>>>> e1acb295409ba3f3df07ee3404c7cd62feca064e
             >
               Register
             </Button>
