@@ -13,7 +13,6 @@ class UserUpdate(BaseModel):
 
     userName: Optional[str] = None
     email: Optional[str] = None
-    role: Optional[UserRole] = None
     websiteURL: Optional[str] = None
     favoriteCreators: Optional[list[str]] = None
 
