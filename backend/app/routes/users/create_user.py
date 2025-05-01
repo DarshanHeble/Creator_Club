@@ -2,28 +2,28 @@ from fastapi import APIRouter, HTTPException
 from app.models.user import User
 from app.firebase import db
 
-# import uuid
-
 router = APIRouter()
 
 
 @router.post("/", response_model=User)
 async def create_user(user: User):
     """
-    Create a new user with a randomly generated ID.
+    Create a new user. Optional fields can be omitted from the request.
 
     Args:
-        user (User): The user data provided in the request body (excluding ID)
+        user (User): The user data provided in the request body. Required fields are:
+                    - id
+                    - role ('fan' or 'creator')
+                    All other fields (username, email, password, etc.) are optional
+                    and can be omitted from the request.
 
     Returns:
-        User: The newly created user object with a generated ID
+        User: The newly created user object, containing only non-None fields
 
     Raises:
         HTTPException: If a database error occurs (500)
     """
     try:
-        # Generate a unique random ID for the user
-        # user_id = str(uuid.uuid4())
         user_dict = user.model_dump()
         # user_dict["id"] = user_id
 
