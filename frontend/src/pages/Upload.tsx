@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Box, Button, Flex, Heading, TextArea } from "@radix-ui/themes";
+import { FaPaperclip, FaPoll } from "react-icons/fa";
 
 const Upload = () => {
   const [postContent, setPostContent] = useState("");
   const [pollQuestion, setPollQuestion] = useState("");
   const [pollOptions, setPollOptions] = useState<string[]>([]);
   const [newOption, setNewOption] = useState("");
+  const [showPollSection, setShowPollSection] = useState(false);
+  const [attachment, setAttachment] = useState<File | null>(null);
 
   const addPollOption = () => {
     if (newOption.trim()) {
@@ -15,10 +18,18 @@ const Upload = () => {
   };
 
   const handleUpload = () => {
-    console.log("Post Created:", { postContent, pollQuestion, pollOptions });
+    console.log("Post Created:", { postContent, pollQuestion, pollOptions, attachment });
     setPostContent("");
     setPollQuestion("");
     setPollOptions([]);
+    setAttachment(null);
+    setShowPollSection(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAttachment(e.target.files[0]);
+    }
   };
 
   return (
@@ -28,11 +39,11 @@ const Upload = () => {
       justify="center"
       className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 dark:from-neutral-800 dark:to-neutral-900 p-6"
     >
-      <Box className="w-full max-w-3xl p-8 bg-white rounded-lg shadow-xl dark:bg-zinc-900">
-        <Heading size="4" className="mb-4 text-lg font-bold text-zinc-800 dark:text-zinc-200">
+      <Box className="w-full max-w-3xl p-8 bg-white  rounded-lg shadow-xl dark:bg-zinc-900">
+        <Heading size="4" className="mb-6 text-lg  font-bold text-zinc-800 dark:text-zinc-200">
           Create a Post
         </Heading>
-        <Flex direction="column" gap="4">
+        <Flex direction="column" gap="6">
           {/* Post Content */}
           <TextArea
             placeholder="Write your post content here..."
@@ -41,41 +52,76 @@ const Upload = () => {
             className="w-full px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
           />
 
-          {/* Poll Section */}
-          <Heading size="5" className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-            Add a Poll (Optional)
-          </Heading>
-          <input
-            type="text"
-            placeholder="Enter your poll question"
-            value={pollQuestion}
-            onChange={(e) => setPollQuestion(e.target.value)}
-            className="w-full px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
-          />
-          <Flex gap="4">
+          {/* Attachment Section */}
+          <Flex gap="4" align="center">
+            <label htmlFor="file-upload" className="cursor-pointer flex items-center gap-2 text-blue-500">
+              <FaPaperclip className="text-lg" />
+              <span>Attach File</span>
+            </label>
             <input
-              type="text"
-              placeholder="Add an option"
-              value={newOption}
-              onChange={(e) => setNewOption(e.target.value)}
-              className="flex-1 px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
+              id="file-upload"
+              type="file"
+              accept="image/*,video/*"
+              className="hidden"
+              onChange={handleFileChange}
             />
-            <Button
-              variant="soft"
-              color="blue"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
-              onClick={addPollOption}
+            {attachment && (
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                Attached: {attachment.name}
+              </span>
+            )}
+          </Flex>
+
+          {/* Poll Section Toggle */}
+          <Flex gap="4" align="center">
+            <button
+              onClick={() => setShowPollSection(!showPollSection)}
+              className="flex items-center gap-2 text-blue-500 hover:text-blue-600 focus:outline-none"
             >
-              Add Option
-            </Button>
+              <FaPoll className="text-lg" />
+              <span>{showPollSection ? "Remove Poll" : "Add Poll"}</span>
+            </button>
           </Flex>
-          <Flex direction="column" gap="2">
-            {pollOptions.map((option, index) => (
-              <Box key={index} className="text-sm text-zinc-600 dark:text-zinc-400">
-                {index + 1}. {option}
-              </Box>
-            ))}
-          </Flex>
+
+          {/* Poll Section */}
+          {showPollSection && (
+            <Flex direction="column" gap="4" className="p-4 border border-zinc-300 rounded-lg dark:border-zinc-600">
+              <input
+                type="text"
+                placeholder="Enter your poll question"
+                value={pollQuestion}
+                onChange={(e) => setPollQuestion(e.target.value)}
+                className="w-full px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
+              />
+              <Flex gap="4">
+                <input
+                  type="text"
+                  placeholder="Add an option"
+                  value={newOption}
+                  onChange={(e) => setNewOption(e.target.value)}
+                  className="flex-1 px-4 py-2 text-sm border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-200"
+                />
+                <Button
+                  variant="soft"
+                  color="blue"
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                  onClick={addPollOption}
+                >
+                  Add Option
+                </Button>
+              </Flex>
+              <Flex direction="column" gap="2">
+                {pollOptions.map((option, index) => (
+                  <Box
+                    key={index}
+                    className="flex items-center justify-between px-4 py-2 text-sm text-zinc-600 bg-zinc-100 rounded-lg dark:bg-zinc-800 dark:text-zinc-400"
+                  >
+                    {index + 1}. {option}
+                  </Box>
+                ))}
+              </Flex>
+            </Flex>
+          )}
 
           {/* Upload Button */}
           <Button

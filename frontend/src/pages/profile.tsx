@@ -178,6 +178,27 @@ const Profile = () => {
         </Flex>
       </Box>
 
+      {/* Posts Section */}
+      <Box className="flex-1 mt-8 p-4 w-full max-w-4xl bg-white rounded-lg shadow-xl dark:bg-zinc-900">
+        <Heading size="4" className="mb-6 text-lg font-bold text-zinc-800 dark:text-zinc-200 text-center">
+          Posts
+        </Heading>
+        <Flex wrap="wrap" gap="6" justify="center">
+          {[...Array(9)].map((_, index) => (
+            <Box
+              key={index}
+              className="w-1/3 aspect-square bg-gray-300 dark:bg-zinc-700 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
+            >
+              {/* <img
+                src={`https://via.placeholder.com/300?text=Post+${index + 1}`}
+                alt={`Post ${index + 1}`}
+                className="w-full h-full object-cover"
+              /> */}
+            </Box>
+          ))}
+        </Flex>
+      </Box>
+
       {/* Photo Options Popup */}
       {showPhotoOptions && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
