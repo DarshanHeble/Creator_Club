@@ -1,10 +1,10 @@
-import { usePrivy } from "@privy-io/react-auth";
 import { FaCog, FaTasks, FaSignOutAlt, FaPlus } from "react-icons/fa";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@hooks/useAuth";
 
 const Sidebar = () => {
-  const { user, logout } = usePrivy();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   const links = [
@@ -19,14 +19,14 @@ const Sidebar = () => {
       label: "Quests",
       href: `/user/${user?.id}/quests`,
       icon: (
-        <FaTasks className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        <FaTasks className="mr-1 h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
       label: "Settings",
       href: `/user/${user?.id}/settings`,
       icon: (
-        <FaCog className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        <FaCog className="mr-1 h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
   ];
@@ -38,10 +38,10 @@ const Sidebar = () => {
         Creator Club
       </div>
 
-       {/* Create Post Button */}
-       <Link
+      {/* Create Post Button */}
+      <Link
         to={`/user/${user?.id}/upload`} // Use dynamic userId in the URL
-        className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:ring-2 focus:ring-blue-400 focus:outline-none"
       >
         <FaPlus />
         Create Post
@@ -71,7 +71,9 @@ const Sidebar = () => {
       {/* Footer */}
       <div className="mt-auto flex flex-col gap-2">
         <button
-          onClick={logout}
+          onClick={() => {
+            logout();
+          }}
           className="flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:bg-gray-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
         >
           <FaSignOutAlt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
@@ -80,7 +82,7 @@ const Sidebar = () => {
 
         <Link
           to={`/user/${user?.id}/profile`}
-          className={`mb-3 flex items-center gap-4 rounded-2xl px-2 py-1 transition-colors ${
+          className={`mb-3 flex items-center gap-4 rounded-md px-2 py-1 transition-colors ${
             location.pathname === `/user/${user?.id}/profile`
               ? "text-primary-600 dark:text-primary-400 bg-gray-200 dark:bg-neutral-800"
               : "hover:bg-gray-200 dark:hover:bg-neutral-800"

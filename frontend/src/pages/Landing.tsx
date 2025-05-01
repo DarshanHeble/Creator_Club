@@ -2,23 +2,16 @@ import { Button } from "@radix-ui/themes";
 import { Suspense, lazy, memo, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
 import { motion } from "framer-motion";
-import { useLogin, usePrivy } from "@privy-io/react-auth";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@hooks/useAuth";
 
 // Lazy load and memoize the Spline component
 const LazySpline = memo(lazy(() => import("@splinetool/react-spline")));
 
 function Landing() {
-  const { ready, authenticated, user } = usePrivy();
-  const { login } = useLogin({
-    onComplete() {
-      navigate(`/user/${user?.id}/dashboard`);
-    },
-  });
+  const { ready, authenticated, user, login } = useAuth();
   const navigate = useNavigate();
   const [isSplineLoaded, setIsSplineLoaded] = useState(false);
-
-  // useEffect(() => {}, [authenticated]);
 
   const contentVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -47,29 +40,17 @@ function Landing() {
         >
           A platform for creators to connect and collaborate
         </motion.p>
-        {ready && !authenticated ? (
-          <motion.div
-            variants={contentVariants}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="pointer-events-auto"
-          >
-            <Button
-              size={"4"}
-              radius="full"
-              onClick={async () => {
-                await login();
-              }}
-            >
+        <motion.div
+          variants={contentVariants}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="pointer-events-auto"
+        >
+          {ready && !authenticated ? (
+            <Button size={"4"} radius="full" onClick={login}>
               Get started
               <FaArrowRight />
             </Button>
-          </motion.div>
-        ) : (
-          <motion.div
-            variants={contentVariants}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="pointer-events-auto"
-          >
+          ) : (
             <Button
               size={"4"}
               radius="full"
@@ -78,8 +59,8 @@ function Landing() {
               Get started
               <FaArrowRight />
             </Button>
-          </motion.div>
-        )}
+          )}
+        </motion.div>
       </motion.div>
       <div className="relative h-[93vh] w-full overflow-hidden max-md:absolute">
         <Suspense>
