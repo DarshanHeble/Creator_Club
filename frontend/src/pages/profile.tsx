@@ -13,6 +13,7 @@ const Profile = () => {
     following: 442,
     posts: 4,
   });
+  const [showPhotoOptions, setShowPhotoOptions] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,6 +35,14 @@ const Profile = () => {
     }));
   };
 
+  const handlePhotoOptionClick = () => {
+    setShowPhotoOptions(true);
+  };
+
+  const closePhotoOptions = () => {
+    setShowPhotoOptions(false);
+  };
+
   return (
     <Flex
       direction="column"
@@ -51,6 +60,16 @@ const Profile = () => {
             fallback={<span className="text-4xl font-bold">{formData.userName[0]}</span>}
             className="rounded-full bg-zinc-100 dark:bg-zinc-800 border-4 border-blue-500"
           />
+          {isEditing && (
+            <Button
+              variant="soft"
+              color="blue"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={handlePhotoOptionClick}
+            >
+              Change Photo
+            </Button>
+          )}
 
           {isEditing ? (
             <Flex direction="column" gap="4" className="w-full">
@@ -159,26 +178,48 @@ const Profile = () => {
         </Flex>
       </Box>
 
-      {/* Post Section */}
-      <Box className="flex-1 mt-8 p-4 w-full max-w-4xl bg-white rounded-lg shadow-xl dark:bg-zinc-900">
-        <Heading size="4" className="mb-6 text-lg font-bold text-zinc-800 dark:text-zinc-200 text-center">
-          Posts
-        </Heading>
-        <Flex wrap="wrap" gap="6" justify="center">
-          {[...Array(9)].map((_, index) => (
-            <Box
-              key={index}
-              className="w-1/3 aspect-square bg-gray-300 dark:bg-zinc-700 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
-            >
-              <img
-                src="https://via.placeholder.com/300"
-                alt="Post"
-                className="w-full h-full object-cover"
-              />
-            </Box>
-          ))}
-        </Flex>
-      </Box>
+      {/* Photo Options Popup */}
+      {showPhotoOptions && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg w-80">
+            <Heading size="4" className="mb-4 text-lg font-bold text-zinc-800">
+              Change Profile Photo
+            </Heading>
+            <Flex direction="column" gap="4">
+              <Button
+                variant="soft"
+                color="blue"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                onClick={() => {
+                  console.log("Choose from Album clicked");
+                  closePhotoOptions();
+                }}
+              >
+                Choose from Album
+              </Button>
+              <Button
+                variant="soft"
+                color="blue"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                onClick={() => {
+                  console.log("Take a Photo clicked");
+                  closePhotoOptions();
+                }}
+              >
+                Take a Photo
+              </Button>
+              <Button
+                variant="soft"
+                color="gray"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600"
+                onClick={closePhotoOptions}
+              >
+                Cancel
+              </Button>
+            </Flex>
+          </div>
+        </div>
+      )}
     </Flex>
   );
 };

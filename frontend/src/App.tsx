@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import DashBoard from "@pages/DashBoard";
 import Register from "@pages/Register";
+import Upload from "@pages/Upload";
 import Landing from "@pages/Landing";
 // import VideoPlayerPage from "@pages/VideoPlayerPage";
 import "./index.css";
@@ -23,6 +24,7 @@ function App() {
           {/* Protected routes with sidebar */}
           <Route path="/user/:userId" element={<UserLayout />}>
             <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="upload" element={<Upload />} />
             <Route path="dashboard" element={<DashBoard />} />
             <Route path="quests" element={<Quests />} />
             <Route path="profile" element={<Profile />} />
