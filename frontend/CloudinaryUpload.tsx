@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
      import { AdvancedImage } from '@cloudinary/react';
      import { Cloudinary } from '@cloudinary/url-gen';
 
@@ -10,15 +10,15 @@ import { useState } from 'react';
 
        const cld = new Cloudinary({
          cloud: {
-           cloudName: 'dp19nujli',
+           cloudName: 'dpt9njujl', // Updated cloud name
          },
        });
 
        const myImage = imageId ? cld.image(imageId) : null;
 
        // Load environment variables
-       const apiKey = import.meta.env.VITE_CLOUDINARY_API_KEY;
-       const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
+       const apiKey = import.meta.env.VITE_CLOUDINARY_API_KEY as string;
+       const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET as string;
 
        // Function to generate SHA-1 hash for the signature
        const sha1 = async (message: string): Promise<string> => {
@@ -32,7 +32,10 @@ import { useState } from 'react';
 
        const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
          const file = event.target.files?.[0];
-         if (!file || !apiKey || !apiSecret) return;
+         if (!file || !apiKey || !apiSecret) {
+           setError('Missing API key or secret. Check .env configuration.');
+           return;
+         }
 
          setLoading(true);
          setError(null);
@@ -51,9 +54,9 @@ import { useState } from 'react';
            formData.append('timestamp', timestamp);
            formData.append('signature', signature);
 
-           console.log('Attempting upload to:', `https://api.cloudinary.com/v1_1/dp19nujli/image/upload`);
+           console.log('Attempting upload to:', `https://api.cloudinary.com/v1_1/dpt9njujl/image/upload`); // Updated cloud name
            const response = await fetch(
-             `https://api.cloudinary.com/v1_1/dp19nujli/image/upload`,
+             `https://api.cloudinary.com/v1_1/dpt9njujl/image/upload`, // Updated cloud name
              {
                method: 'POST',
                body: formData,
