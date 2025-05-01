@@ -14,7 +14,7 @@ async def create_user(user: User):
         user (User): The user data provided in the request body. Required fields are:
                     - id
                     - role ('fan' or 'creator')
-                    All other fields (username, email, password, etc.) are optional
+                    All other fields (userName, email, password, etc.) are optional
                     and can be omitted from the request.
 
     Returns:
@@ -24,8 +24,7 @@ async def create_user(user: User):
         HTTPException: If a database error occurs (500)
     """
     try:
-        user_dict = user.model_dump()
-        # user_dict["id"] = user_id
+        user_dict = user.model_dump(by_alias=True)
 
         # Save the user document to Firestore, excluding fields with None values
         db.collection("users").document(user_dict["id"]).set(

@@ -30,7 +30,7 @@ async def update_user(user_id: str, user: User):
             )
 
         # Update only non-None fields
-        update_data = {k: v for k, v in user.model_dump().items() if v is not None}
+        update_data = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
         user_ref.update(update_data)
 
         # Return updated user data
