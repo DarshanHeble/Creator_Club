@@ -26,7 +26,7 @@ class User(BaseModel):
 
     id: str = None
     wallet_address: Optional[str] = None
-    username: str
+    username: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None
     role: UserRole

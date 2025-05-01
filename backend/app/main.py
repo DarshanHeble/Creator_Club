@@ -6,6 +6,7 @@ from app.routes.users import (
     update_router,
     delete_router,
     username_router,
+    get_user_router,
 )
 
 # Initialize FastAPI application instance
@@ -32,3 +33,4 @@ app.include_router(create_router, prefix="/users", tags=["users"])
 app.include_router(update_router, prefix="/users", tags=["users"])
 app.include_router(delete_router, prefix="/users", tags=["users"])
 app.include_router(username_router, prefix="/users", tags=["users"])
+app.include_router(get_user_router, prefix="/users", tags=["users"])
