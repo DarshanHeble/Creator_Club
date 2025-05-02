@@ -17,14 +17,16 @@ import { FaPowerOff, FaPlay } from "react-icons/fa";
 import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
-import { useLogout } from "@privy-io/react-auth";
+import { useLogout, usePrivy } from "@privy-io/react-auth";
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {
-  // const { isConnected } = useAccount();
-  // const { disconnect } = useDisconnect();
+  const { user } = usePrivy();
   const { logout } = useLogout();
   const navigate = useNavigate();
+
+  console.log(user);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<{
     title: string;

@@ -1,10 +1,9 @@
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { Button } from "@radix-ui/themes";
-import { useLogin, usePrivy } from "@privy-io/react-auth";
+import { useAuth } from "@hooks/useAuth";
 
 const Header = () => {
-  const { ready, authenticated } = usePrivy();
-  const { login } = useLogin();
+  const { ready, authenticated, login } = useAuth();
 
   return (
     <div className="relative">
@@ -12,10 +11,8 @@ const Header = () => {
         <div className="logo flex w-10 items-center justify-center rounded-4xl bg-[#ad00ad] p-1.5 text-[larger] font-extrabold text-white dark:bg-[#800080]">
           CC
         </div>
-        {/* Navigation Links */}
         <nav className="hidden gap-4 md:flex">
-          {/* <Link to="/">Home</Link> */}
-          {/* <Link to="/dashboard">Dashboard</Link> */}
+          {/* Navigation links here */}
         </nav>
 
         <div className="flex gap-4">
@@ -24,7 +21,6 @@ const Header = () => {
               Login
             </Button>
           )}
-          {/* Theme Switcher */}
           <ThemeSwitcher />
         </div>
       </div>
