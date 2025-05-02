@@ -25,7 +25,6 @@ const DashBoard = () => {
   // const { disconnect } = useDisconnect();
   const { logout } = useLogout();
   const navigate = useNavigate();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<{
     title: string;

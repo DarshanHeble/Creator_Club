@@ -3,7 +3,7 @@ import { FaCog, FaTasks, FaSignOutAlt, FaPlus } from "react-icons/fa";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = ({ userRole }: { userRole: string }) => {
   const { user, logout } = usePrivy();
   const location = useLocation();
 
@@ -38,14 +38,16 @@ const Sidebar = () => {
         Creator Club
       </div>
 
-       {/* Create Post Button */}
-       <Link
-        to={`/user/${user?.id}/upload`} // Use dynamic userId in the URL
-        className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      >
-        <FaPlus />
-        Create Post
-      </Link>
+      {/* Create Post Button (Only for Creators) */}
+      {userRole === "Creator" && (
+        <Link
+          to={`/user/${user?.id}/upload`}
+          className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <FaPlus />
+          Create Post
+        </Link>
+      )}
 
       {/* Sidebar Links */}
       <nav className="mt-4 flex flex-col gap-2">
