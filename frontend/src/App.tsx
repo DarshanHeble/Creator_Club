@@ -18,6 +18,7 @@ import Settings from "@pages/Settings";
 import Quests from "@pages/Quests";
 
 function App() {
+  
   return (
     <BrowserRouter>
       <Routes>

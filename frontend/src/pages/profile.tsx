@@ -1,19 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Button, Flex, Heading, Text, Avatar } from "@radix-ui/themes";
 import { FaEdit, FaSave } from "react-icons/fa";
+import { userService } from "@services/userService"; // Import the userService for API calls
+import { useAuth } from "@hooks/useAuth"; // Use the authentication hook for user context
 
 const Profile = () => {
+  const { user } = useAuth(); // Get the authenticated user
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    userName: "John Doe",
-    email: "johndoe@example.com",
-    role: "Creator",
-    bio: "Passionate creator connecting with fans worldwide.",
-    followers: 334,
-    following: 442,
-    posts: 4,
+    userName: "",
+    email: "",
+    role: "Fan", // Default role set to Fan
+    bio: "",
+    followers: 0,
+    following: 0,
+    posts: 0,
   });
   const [showPhotoOptions, setShowPhotoOptions] = useState(false);
+
+  // Fetch user data from Firestore on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.id) return;
+      try {
+        const userData = await userService.getUser(user.id); // Fetch user data from backend
+        setFormData({
+          userName: userData.userName || "",
+          email: userData.email || "",
+          role: userData.role || "Fan",
+          bio: userData.bio || "",
+          followers: userData.followers || 0,
+          following: userData.following || 0,
+          posts: userData.posts || 0,
+        });
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [user?.id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,16 +49,20 @@ const Profile = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleSave = () => {
-    console.log("Saved data:", formData);
-    setIsEditing(false);
-  };
-
-  const toggleRole = () => {
-    setFormData((prev) => ({
-      ...prev,
-      role: prev.role === "Creator" ? "Fan" : "Creator",
-    }));
+  const handleSave = async () => {
+    if (!user?.id) return;
+    try {
+      await userService.updateUser(user.id, {
+        userName: formData.userName,
+        email: formData.email,
+        bio: formData.bio,
+      });
+      alert("Profile updated successfully!");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
   };
 
   const handlePhotoOptionClick = () => {
@@ -163,18 +193,6 @@ const Profile = () => {
             {isEditing ? <FaSave /> : <FaEdit />}
             {isEditing ? "Save" : "Edit Profile"}
           </Button>
-
-          {/* Toggle Role Button */}
-          {!isEditing && (
-            <Button
-              variant="soft"
-              color="gray"
-              className="mt-4 px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
-              onClick={toggleRole}
-            >
-              Switch to {formData.role === "Creator" ? "Fan" : "Creator"}
-            </Button>
-          )}
         </Flex>
       </Box>
 
@@ -189,58 +207,11 @@ const Profile = () => {
               key={index}
               className="w-1/3 aspect-square bg-gray-300 dark:bg-zinc-700 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
             >
-              {/* <img
-                src={`https://via.placeholder.com/300?text=Post+${index + 1}`}
-                alt={`Post ${index + 1}`}
-                className="w-full h-full object-cover"
-              /> */}
+              {/* Placeholder for post content */}
             </Box>
           ))}
         </Flex>
       </Box>
-
-      {/* Photo Options Popup */}
-      {showPhotoOptions && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg w-80">
-            <Heading size="4" className="mb-4 text-lg font-bold text-zinc-800">
-              Change Profile Photo
-            </Heading>
-            <Flex direction="column" gap="4">
-              <Button
-                variant="soft"
-                color="blue"
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
-                onClick={() => {
-                  console.log("Choose from Album clicked");
-                  closePhotoOptions();
-                }}
-              >
-                Choose from Album
-              </Button>
-              <Button
-                variant="soft"
-                color="blue"
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
-                onClick={() => {
-                  console.log("Take a Photo clicked");
-                  closePhotoOptions();
-                }}
-              >
-                Take a Photo
-              </Button>
-              <Button
-                variant="soft"
-                color="gray"
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600"
-                onClick={closePhotoOptions}
-              >
-                Cancel
-              </Button>
-            </Flex>
-          </div>
-        </div>
-      )}
     </Flex>
   );
 };

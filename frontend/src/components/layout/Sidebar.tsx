@@ -2,10 +2,28 @@ import { FaCog, FaTasks, FaSignOutAlt, FaPlus } from "react-icons/fa";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
+import { useEffect, useState } from "react";
+import { userService } from "@services/userService";
 
 const Sidebar = ({ userRole }: { userRole: string }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const [userName, setUserName] = useState<string>("");
+
+  // Fetch user data from Firebase
+  useEffect(() => {
+    const fetchUserName = async () => {
+      if (!user?.id) return;
+      try {
+        const userData = await userService.getUser(user.id);
+        setUserName(userData.userName || "Unknown User");
+      } catch (error) {
+        console.error("Failed to fetch user name:", error);
+      }
+    };
+
+    fetchUserName();
+  }, [user?.id]);
 
   const links = [
     {
@@ -103,10 +121,10 @@ const Sidebar = ({ userRole }: { userRole: string }) => {
                   : "text-neutral-700 dark:text-neutral-200"
               }`}
             >
-              Manu Arora
+              {userName}
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Creator
+              {userRole}
             </p>
           </div>
         </Link>
