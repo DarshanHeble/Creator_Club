@@ -1,5 +1,6 @@
 export type User = {
   id: string;
+  // wallet: Wallet;
   walletAddress: string;
   role: userRole;
   userName?: string;
@@ -9,6 +10,11 @@ export type User = {
   favoriteCreators?: string[];
   websiteURL?: string;
 };
+
+// type Wallet = {
+//   walletAddress: string;
+//   chainType: "ethereum" | "solana" | undefined;
+// };
 
 export type UpdateUser = Omit<
   User,
