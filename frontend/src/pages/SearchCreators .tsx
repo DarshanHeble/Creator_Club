@@ -1,24 +1,14 @@
 import { useState } from "react";
-import { Avatar, Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { Avatar, Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { FaSearch } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { userService } from "@services/userService";
-
-export type User = {
-  id: string;
-  walletAddress: string;
-  role: string; // Use the appropriate enum/type for `userRole`
-  userName?: string;
-  bio?: string;
-  email?: string;
-  password?: string;
-  profilePhoto?: string;
-  favoriteCreators?: string[];
-  websiteURL?: string;
-};
+import { User } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 const SearchCreators = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   // Fetch creators using react-query
   const {
@@ -28,7 +18,7 @@ const SearchCreators = () => {
   } = useQuery<User[]>({
     queryKey: ["creators"],
     queryFn: async () => {
-      const response = await userService.getCreators(); // Adjust this function to fetch all creators
+      const response = await userService.getCreators();
       return response;
     },
   });
@@ -76,9 +66,7 @@ const SearchCreators = () => {
               <Box
                 key={creator.id}
                 className="mb-4 cursor-pointer rounded-lg border border-zinc-200 bg-white p-4 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
-                onClick={() =>
-                  (window.location.href = `/creator/${creator.id}`)
-                }
+                onClick={() => navigate(`/user/${creator.id}/profile`)}
               >
                 {/* Avatar and Name */}
                 <Flex align="center" gap="4">
@@ -90,6 +78,7 @@ const SearchCreators = () => {
                   <div className="flex flex-col">
                     <Text className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
                       {creator.userName || "Unnamed Creator"}
+                      {creator.id || "Creator id"}
                     </Text>
 
                     {/* Email */}
