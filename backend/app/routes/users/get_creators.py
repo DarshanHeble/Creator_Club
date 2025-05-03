@@ -4,6 +4,7 @@ from app.firebase import db
 
 router = APIRouter()
 
+
 @router.get("/creators", response_model=list[User])
 async def get_creators():
     """
@@ -27,4 +28,6 @@ async def get_creators():
         return creators
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch creators: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to fetch creators: {str(e)}"
+        )

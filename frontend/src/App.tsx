@@ -16,6 +16,7 @@ import Profile from "@pages/profile";
 import Settings from "@pages/Settings";
 import Quests from "@pages/Quests";
 import { Toaster } from "@components/ui/sonner";
+import SearchCreators from "@pages/SearchCreators ";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path="quests" element={<Quests />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="search" element={<SearchCreators />} />
           </Route>
         </Routes>
       </BrowserRouter>

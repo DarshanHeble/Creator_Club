@@ -1,14 +1,13 @@
 import { Box, Button, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FaPowerOff, FaPlay, FaSearch} from "react-icons/fa";
+import { FaPowerOff, FaPlay, FaSearch } from "react-icons/fa";
 
 // Import local images
 import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
 import { useAuth } from "@hooks/useAuth";
-import SearchCreators from "@pages/SearchCreators ";
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {
@@ -18,18 +17,16 @@ const DashBoard = () => {
   console.log(user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedVideo, setSelectedVideo] = useState<{
     title: string;
     url: string;
   } | null>(null);
-  
 
   useEffect(() => {
     // Check if the user is authenticated
     // If not, redirect to the login page
     if (!authenticated) {
-      navigate("/");
+      navigate("/user/");
     }
   }, [authenticated, navigate]);
 
@@ -78,21 +75,16 @@ const DashBoard = () => {
 
   return (
     <div className="container mx-auto p-8">
-    {/* Search Bar */}
-    <Flex
-          align="center"
-          className="w-full max-w-4xl rounded-lg border border-zinc-200 bg-white px-4 py-2 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
-        >
-          <FaSearch className="mr-2 text-zinc-500 dark:text-zinc-400" />
-          <input
-            type="text"
-            placeholder="Search for creators..."
-            value={searchQuery}
-            // value={SearchCreators}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-transparent text-sm text-zinc-800 placeholder-zinc-500 focus:outline-none dark:text-zinc-200 dark:placeholder-zinc-400"
-          />
-        </Flex>
+      {/* Search Bar */}
+      <div
+        onClick={() => navigate(`/user/${user?.id}/search`)} // Or replace with <Link href="/search"> for Next.js
+        className="flex w-full max-w-4xl cursor-pointer items-center rounded-lg border border-zinc-200 bg-white px-4 py-2 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+      >
+        <FaSearch className="mr-2 text-zinc-500 dark:text-zinc-400" />
+        <span className="w-full bg-transparent text-sm text-zinc-800 placeholder-zinc-500 focus:outline-none dark:text-zinc-200 dark:placeholder-zinc-400">
+          Search for creators...
+        </span>
+      </div>
       <Flex direction="column" gap="6" className="relative py-8">
         {/* Main Dashboard Content */}
         <Flex justify="between" align="center">

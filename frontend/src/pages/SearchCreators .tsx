@@ -1,40 +1,55 @@
-import { useState, useEffect } from "react";
-import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { useState } from "react";
+import { Avatar, Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
 import { FaSearch } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import { userService } from "@services/userService";
+
+export type User = {
+  id: string;
+  walletAddress: string;
+  role: string; // Use the appropriate enum/type for `userRole`
+  userName?: string;
+  bio?: string;
+  email?: string;
+  password?: string;
+  profilePhoto?: string;
+  favoriteCreators?: string[];
+  websiteURL?: string;
+};
 
 const SearchCreators = () => {
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
-  const [filteredCreators, setFilteredCreators] = useState([]); // State for filtered creators
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Dummy data for creators
-  const creators = [
-    { id: 1, name: "John Doe", bio: "Tech reviewer and content creator." },
-    { id: 2, name: "Jane Smith", bio: "Travel and lifestyle vlogger." },
-    { id: 3, name: "Mike Johnson", bio: "Fitness and health enthusiast." },
-    { id: 4, name: "Emily Davis", bio: "Food blogger and recipe creator." },
-    { id: 5, name: "Chris Lee", bio: "Gaming and esports streamer." },
-  ];
+  // Fetch creators using react-query
+  const {
+    data: creators = [],
+    isLoading,
+    isError,
+  } = useQuery<User[]>({
+    queryKey: ["creators"],
+    queryFn: async () => {
+      const response = await userService.getCreators(); // Adjust this function to fetch all creators
+      return response;
+    },
+  });
 
-  // Filter creators based on the search query
-  useEffect(() => {
-    const filtered = creators.filter((creator) =>
-      creator.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredCreators(filtered);
-  }, [searchQuery]);
+  // Filter creators based on search query
+  const filteredCreators = creators.filter((creator) =>
+    (creator.userName || "").toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <div className="container mx-auto p-8">
       <Flex direction="column" align="center" gap="6">
         {/* Page Header */}
-        <Heading size="4" className="text-center">
+        <Heading size="7" className="text-center">
           Search Creators
         </Heading>
 
         {/* Search Bar */}
         <Flex
           align="center"
-          className="w-full max-w-md rounded-lg border border-zinc-200 bg-white px-4 py-2 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+          className="w-full max-w-2xl rounded-lg border border-zinc-200 bg-white px-4 py-2 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
         >
           <FaSearch className="mr-2 text-zinc-500 dark:text-zinc-400" />
           <input
@@ -46,28 +61,43 @@ const SearchCreators = () => {
           />
         </Flex>
 
-        {/* Creators List */}
-        <Box className="w-full max-w-md">
-          {filteredCreators.length > 0 ? (
+        {/* Loading, Error, or Creators List */}
+        <Box className="w-full max-w-2xl">
+          {isLoading ? (
+            <Text className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+              Loading creators...
+            </Text>
+          ) : isError ? (
+            <Text className="text-center text-sm text-red-600 dark:text-red-400">
+              Failed to load creators. Please try again later.
+            </Text>
+          ) : filteredCreators.length > 0 ? (
             filteredCreators.map((creator) => (
               <Box
                 key={creator.id}
-                className="mb-4 rounded-lg border border-zinc-200 bg-white p-4 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                className="mb-4 cursor-pointer rounded-lg border border-zinc-200 bg-white p-4 shadow-md transition-transform duration-300 hover:scale-105 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+                onClick={() =>
+                  (window.location.href = `/creator/${creator.id}`)
+                }
               >
-                <Text className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-                  {creator.name}
-                </Text>
-                <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {creator.bio}
-                </Text>
-                <Button
-                  variant="soft"
-                  color="blue"
-                  className="mt-4"
-                  onClick={() => alert(`Viewing profile of ${creator.name}`)}
-                >
-                  View Profile
-                </Button>
+                {/* Avatar and Name */}
+                <Flex align="center" gap="4">
+                  <Avatar
+                    src={creator.profilePhoto}
+                    size={"5"}
+                    fallback={(creator.userName?.[0] || "?").toUpperCase()}
+                  />
+                  <div className="flex flex-col">
+                    <Text className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
+                      {creator.userName || "Unnamed Creator"}
+                    </Text>
+
+                    {/* Email */}
+                    <Text className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                      {creator.email || "No email available"}
+                    </Text>
+                  </div>
+                </Flex>
               </Box>
             ))
           ) : (
