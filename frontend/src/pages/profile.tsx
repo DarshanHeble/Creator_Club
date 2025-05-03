@@ -36,7 +36,7 @@ const Profile = () => {
   });
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
-  const [posts, setPosts] = useState([]); // State to store posts
+  const [posts] = useState([]); // State to store posts
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -82,6 +82,8 @@ const Profile = () => {
     }
   };
 
+  const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${formData.userName || "default"}`;
+
   return (
     <Flex
       direction="column"
@@ -100,9 +102,11 @@ const Profile = () => {
                 className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-300 text-gray-500">
-                No Photo
-              </div>
+              <img
+                src={avatarUrl}
+                alt="Generated Avatar"
+                className="h-full w-full rounded-full object-cover"
+              />
             )}
             {/* Camera Icon on Hover */}
             <div className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100">
