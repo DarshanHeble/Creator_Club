@@ -1,5 +1,7 @@
 import { usePrivy, useLogin, useLogout } from "@privy-io/react-auth";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { userService } from "@services/userService";
 
 export const useAuth = () => {
   const { user, ready, authenticated } = usePrivy();
@@ -16,31 +18,25 @@ export const useAuth = () => {
     },
   });
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState<string>("");
 
-  //   const loginWithRedirect = useCallback(async () => {
-  //     try {
-  //       await login();
-  //       // After successful login, user will be redirected to dashboard
-  //       if (user?.id) {
-  //         navigate(`/user/${user.id}/dashboard`);
-  //       }
-  //     } catch (error) {
-  //       console.error("Login failed:", error);
-  //     }
-  //   }, [login, navigate, user?.id]);
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      if (!user?.id) return;
+      try {
+        const userData = await userService.getUser(user.id);
+        setUserRole(userData.role);
+      } catch (error) {
+        console.error("Failed to fetch user role:", error);
+      }
+    };
 
-  //   const logout = useCallback(async () => {
-  //     try {
-  //       await privyLogout();
-  //       // After logout, redirect to landing page
-  //       navigate("/");
-  //     } catch (error) {
-  //       console.error("Logout failed:", error);
-  //     }
-  //   }, [privyLogout, navigate]);
+    fetchUserRole();
+  }, [user?.id]);
 
   return {
     user,
+    userRole,
     ready,
     authenticated,
     login,
