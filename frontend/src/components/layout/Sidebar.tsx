@@ -14,7 +14,6 @@ const Sidebar = () => {
     queryFn: async () => {
       if (!privyUser?.id) return;
       const userData = await userService.getUser(privyUser.id);
-      // setUser(userData.userName || "No Username");
       return userData;
     },
     enabled: !!privyUser?.id,
