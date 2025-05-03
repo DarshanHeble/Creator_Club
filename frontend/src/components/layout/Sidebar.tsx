@@ -2,28 +2,23 @@ import { FaCog, FaTasks, FaSignOutAlt, FaPlus } from "react-icons/fa";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
-import { useEffect, useState } from "react";
 import { userService } from "@services/userService";
+import { useQuery } from "@tanstack/react-query";
 
-const Sidebar = ({ userRole }: { userRole: string }) => {
-  const { user, logout } = useAuth();
+const Sidebar = () => {
+  const { privyUser, logout } = useAuth();
   const location = useLocation();
-  const [userName, setUserName] = useState<string>("");
 
-  // Fetch user data from Firebase
-  useEffect(() => {
-    const fetchUserName = async () => {
-      if (!user?.id) return;
-      try {
-        const userData = await userService.getUser(user.id);
-        setUserName(userData.userName || "Unknown User");
-      } catch (error) {
-        console.error("Failed to fetch user name:", error);
-      }
-    };
-
-    fetchUserName();
-  }, [user?.id]);
+  const { data: user } = useQuery({
+    queryKey: ["user", privyUser?.id],
+    queryFn: async () => {
+      if (!privyUser?.id) return;
+      const userData = await userService.getUser(privyUser.id);
+      // setUser(userData.userName || "No Username");
+      return userData;
+    },
+    enabled: !!privyUser?.id,
+  });
 
   const links = [
     {
@@ -57,10 +52,10 @@ const Sidebar = ({ userRole }: { userRole: string }) => {
       </div>
 
       {/* Create Post Button (Only for Creators) */}
-      {userRole === "creator" && (
+      {user?.role === "creator" && (
         <Link
           to={`/user/${user?.id}/upload`}
-          className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:ring-2 focus:ring-blue-400 focus:outline-none"
         >
           <FaPlus />
           Create Post
@@ -121,10 +116,10 @@ const Sidebar = ({ userRole }: { userRole: string }) => {
                   : "text-neutral-700 dark:text-neutral-200"
               }`}
             >
-              {userName}
+              {user?.userName || "No Username"}
             </p>
             <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              {userRole}
+              {user?.role}
             </p>
           </div>
         </Link>

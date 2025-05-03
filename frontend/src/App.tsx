@@ -15,37 +15,41 @@ import UserLayout from "@components/layout/UserLayout";
 import Profile from "@pages/profile";
 import Settings from "@pages/Settings";
 import Quests from "@pages/Quests";
+import { Toaster } from "@components/ui/sonner";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public routes with header */}
-        <Route
-          element={
-            <>
-              <Header />
-              <div className="flex h-[calc(100vh-3.5rem)] w-full">
-                <Outlet />
-              </div>
-            </>
-          }
-        >
-          <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+    <>
+      <Toaster richColors />
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes with header */}
+          <Route
+            element={
+              <>
+                <Header />
+                <div className="flex h-[calc(100vh-3.5rem)] w-full">
+                  <Outlet />
+                </div>
+              </>
+            }
+          >
+            <Route path="/" element={<Landing />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
 
-        {/* Protected routes with Sidebar */}
-        <Route path="/user/:userId" element={<UserLayout />}>
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="upload" element={<Upload />} />
-          <Route path="dashboard" element={<DashBoard />} />
-          <Route path="quests" element={<Quests />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          {/* Protected routes with Sidebar */}
+          <Route path="/user/:userId" element={<UserLayout />}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="upload" element={<Upload />} />
+            <Route path="dashboard" element={<DashBoard />} />
+            <Route path="quests" element={<Quests />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

@@ -9,7 +9,7 @@ import { useAuth } from "@hooks/useAuth";
 const LazySpline = memo(lazy(() => import("@splinetool/react-spline")));
 
 function Landing() {
-  const { ready, authenticated, user, login } = useAuth();
+  const { ready, authenticated, privyUser: user, login } = useAuth();
   const navigate = useNavigate();
   const [isSplineLoaded, setIsSplineLoaded] = useState(false);
 
