@@ -8,7 +8,6 @@ import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
 import { useAuth } from "@hooks/useAuth";
-import SearchCreators from "@pages/SearchCreators ";
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {

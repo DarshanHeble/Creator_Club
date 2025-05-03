@@ -16,6 +16,7 @@ import Profile from "@pages/profile";
 import Settings from "@pages/Settings";
 import Quests from "@pages/Quests";
 import { Toaster } from "@components/ui/sonner";
+import SearchCreators from "@pages/SearchCreators ";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           </Route>
 
           {/* Protected routes with Sidebar */}
+          <Route path="/search-creators" element={<SearchCreators/>} />
           <Route path="/user/:userId" element={<UserLayout />}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="upload" element={<Upload />} />
