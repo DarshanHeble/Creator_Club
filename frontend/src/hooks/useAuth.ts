@@ -9,7 +9,11 @@ export const useAuth = () => {
   const navigate = useNavigate();
 
   // Fetch user data from your database
-  const { data: fetchedUser, refetch: refetchUser } = useQuery({
+  const {
+    data: fetchedUser,
+    refetch: refetchUser,
+    isLoading,
+  } = useQuery({
     queryKey: ["user", privyUser?.id],
     queryFn: async () => {
       if (!privyUser?.id) return null;
@@ -52,6 +56,7 @@ export const useAuth = () => {
     authenticated,
     login,
     logout,
+    isLoading,
     user: fetchedUser, // Return the fetched user
     refetchUser, // Expose refetch function if needed externally
   };

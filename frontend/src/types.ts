@@ -1,9 +1,9 @@
 export type User = {
   id: string;
-  // wallet: Wallet;
   walletAddress: string;
   role: userRole;
   userName?: string;
+  bio?: string;
   email?: string;
   password?: string;
   profilePhoto?: string;
@@ -18,7 +18,7 @@ export type User = {
 
 export type UpdateUser = Omit<
   User,
-  "id" | "walletAddress" | "password" | "role"
+  "id" | "walletAddress" | "password" | "role" | "profilePhoto"
 >;
 
 export type userRole = "creator" | "fan";

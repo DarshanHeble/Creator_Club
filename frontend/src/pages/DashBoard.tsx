@@ -26,7 +26,7 @@ const DashBoard = () => {
     // Check if the user is authenticated
     // If not, redirect to the login page
     if (!authenticated) {
-      navigate("/login");
+      navigate("/");
     }
   }, [authenticated, navigate]);
 
@@ -112,7 +112,7 @@ const DashBoard = () => {
                 Email:
               </Text>{" "}
               <Text className="mb-4 text-zinc-800 dark:text-zinc-200">
-                john.doe@example.com
+                {user?.email || "No Email"}
               </Text>
             </Box>
 
