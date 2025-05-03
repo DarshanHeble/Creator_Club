@@ -10,6 +10,11 @@ from app.routes.users import (
     update_role_router,
     get_creators_router,
     list_users_router,
+    follow_creator_router,
+    unfollow_creator_router,
+    bulk_create_router,
+    get_creators_by_fan_router,
+    get_fans_by_creator_router,
 )
 
 
@@ -41,3 +46,9 @@ app.include_router(get_user_router, prefix="/users", tags=["users"])
 app.include_router(update_role_router, prefix="/users", tags=["users"])
 app.include_router(get_creators_router, prefix="/users", tags=["users"])
 app.include_router(list_users_router, prefix="/users", tags=["users"])
+app.include_router(follow_creator_router, prefix="/users", tags=["users"])
+app.include_router(unfollow_creator_router, prefix="/users", tags=["users"])
+app.include_router(bulk_create_router, prefix="/users", tags=["users"])
+app.include_router(get_creators_by_fan_router, prefix="/users", tags=["users"])
+app.include_router(get_fans_by_creator_router, prefix="/users", tags=["users"])
+
