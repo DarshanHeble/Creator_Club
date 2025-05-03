@@ -15,3 +15,13 @@ export type UpdateUser = Omit<
 >;
 
 export type userRole = "creator" | "fan";
+
+export type Quest = {
+  id: string;
+  title: string;
+  description: string;
+  rewards: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  creatorId: string;
+  creatorName: string;
+};
