@@ -1,4 +1,6 @@
-import { useState } from "react";
+wimport { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@hooks/useAuth";
 import { Box, Button, Flex, Heading, TextArea } from "@radix-ui/themes";
 import { FaPaperclip, FaPoll } from "react-icons/fa";
 
@@ -9,6 +11,16 @@ const Upload = () => {
   const [newOption, setNewOption] = useState("");
   const [showPollSection, setShowPollSection] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect fans to the dashboard
+  useEffect(() => {
+    if (user?.role !== "creator") {
+      navigate("/user/dashboard");
+    }
+  }, [user?.role, navigate]);
 
   const addPollOption = () => {
     if (newOption.trim()) {
