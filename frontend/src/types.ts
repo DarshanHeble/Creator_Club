@@ -5,6 +5,7 @@ export type User = {
   userName?: string;
   email?: string;
   password?: string;
+  profilePhoto?: string;
   favoriteCreators?: string[];
   websiteURL?: string;
 };
