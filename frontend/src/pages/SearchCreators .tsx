@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { userService } from "@services/userService";
 import { User } from "@/types";
 import { useNavigate } from "react-router-dom";
+import Loader from "@components/Loading";
 
 const SearchCreators = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,9 +55,9 @@ const SearchCreators = () => {
         {/* Loading, Error, or Creators List */}
         <Box className="w-full max-w-2xl">
           {isLoading ? (
-            <Text className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-              Loading creators...
-            </Text>
+            <div className="flex h-32 items-center justify-center">
+              <Loader />
+            </div>
           ) : isError ? (
             <Text className="text-center text-sm text-red-600 dark:text-red-400">
               Failed to load creators. Please try again later.

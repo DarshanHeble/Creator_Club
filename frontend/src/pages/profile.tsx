@@ -6,6 +6,7 @@ import { useAuth } from "@hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "@components/Loading";
 
 interface ProfileProps {
   userId: string;
@@ -78,7 +79,12 @@ const Profile: React.FC<ProfileProps> = () => {
     }
   }, [authenticated, navigate, ready]);
 
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader />
+      </div>
+    );
   if (error) return <Text>Failed to load user data</Text>;
 
   return (
