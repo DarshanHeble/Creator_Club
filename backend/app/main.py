@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import websocket, base
+from app.routes.users import get_creators_router
 from app.routes.users import (
     create_router,
     update_router,
@@ -8,7 +9,11 @@ from app.routes.users import (
     username_router,
     get_user_router,
     update_role_router,
+    get_creators_router,
+    list_users_router,
+    
 )
+
 
 # Initialize FastAPI application instance
 app = FastAPI()
@@ -36,3 +41,5 @@ app.include_router(delete_router, prefix="/users", tags=["users"])
 app.include_router(username_router, prefix="/users", tags=["users"])
 app.include_router(get_user_router, prefix="/users", tags=["users"])
 app.include_router(update_role_router, prefix="/users", tags=["users"])
+app.include_router(get_creators_router, prefix="/users", tags=["users"])
+app.include_router(list_users_router, prefix="/users", tags=["users"])

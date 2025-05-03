@@ -5,7 +5,7 @@ from app.firebase import db
 router = APIRouter()
 
 
-@router.get("/{user_id}", response_model=User)
+@router.get("/get-user/{user_id}", response_model=User)
 async def get_user(user_id: str):
     """
     Fetch a single user's data by their ID.

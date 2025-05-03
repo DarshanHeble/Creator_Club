@@ -5,7 +5,7 @@ from app.firebase import db
 router = APIRouter()
 
 
-@router.post("/", response_model=User)
+@router.post("/create", response_model=User)
 async def create_user(user: User):
     """
     Create a new user. Optional fields can be omitted from the request.

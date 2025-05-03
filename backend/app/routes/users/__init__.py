@@ -12,6 +12,8 @@ from .delete_user import router as delete_router
 from .is_username_taken import router as username_router
 from .get_user import router as get_user_router
 from .update_role import router as update_role_router
+from .get_creators import router as get_creators_router
+from .list_users import router as list_users_router
 
 # Specify which routers should be exported when using "from app.routes.user import *"
 __all__ = [
@@ -22,4 +24,7 @@ __all__ = [
     "username_router",
     "get_user_router",
     "update_role_router",
+    "get_creators_router",
+    "get_creators_router",
+    "list_users_router",
 ]
