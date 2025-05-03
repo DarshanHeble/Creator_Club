@@ -1,36 +1,52 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Sidebar from "@components/Sidebar";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Header from "./components/Header";
 import DashBoard from "@pages/DashBoard";
-import Login from "@pages/Login";
 import Register from "@pages/Register";
+import Upload from "@pages/Upload";
 import Landing from "@pages/Landing";
-import VideoPlayerPage from "@pages/VideoPlayerPage";
-import CloudinaryUpload from "../CloudinaryUpload";
-import { useAccount } from "wagmi";
+import TestUpload from "./test/TestUpload"; // Added import for TestUpload
 import "./index.css";
+import UserLayout from "@components/layout/UserLayout";
+import Profile from "@pages/profile";
+import Settings from "@pages/Settings";
+import Quests from "@pages/Quests";
 
 function App() {
-  const { isConnected } = useAccount();
-
   return (
     <BrowserRouter>
-      <div className="flex h-screen">
-        {isConnected && <Sidebar />}
-        <div className="flex-1">
-          <Header />
-          <div className={isConnected ? "mt-14" : ""}>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<DashBoard />} />
-              <Route path="/video" element={<VideoPlayerPage />} />
-              <Route path="/cloudinary-upload" element={<CloudinaryUpload />} />
-            </Routes>
-          </div>
-        </div>
-      </div>
+      <Routes>
+        {/* Public routes with header */}
+        <Route
+          element={
+            <>
+              <Header />
+              <div className="flex h-[calc(100vh-3.5rem)] w-full">
+                <Outlet />
+              </div>
+            </>
+          }
+        >
+          <Route path="/" element={<Landing />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/test-upload" element={<TestUpload />} /> {/* Added route */}
+        </Route>
+
+        {/* Protected routes with Sidebar */}
+        <Route path="/user/:userId" element={<UserLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="upload" element={<Upload />} />
+          <Route path="dashboard" element={<DashBoard />} />
+          <Route path="quests" element={<Quests />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
