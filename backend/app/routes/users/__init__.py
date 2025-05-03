@@ -14,6 +14,11 @@ from .get_user import router as get_user_router
 from .update_role import router as update_role_router
 from .get_creators import router as get_creators_router
 from .list_users import router as list_users_router
+from .bulk_create import router as bulk_create_router
+from .follow_creator import router as follow_creator_router
+from .unfollow_creator import router as unfollow_creator_router
+from .get_creators_by_fan import router as get_creators_by_fan_router
+from .get_fans_by_creator import router as get_fans_by_creator_router
 
 # Specify which routers should be exported when using "from app.routes.user import *"
 __all__ = [
@@ -27,4 +32,9 @@ __all__ = [
     "get_creators_router",
     "get_creators_router",
     "list_users_router",
+    "bulk_create_router",
+    "unfollow_creator_router",
+    "follow_creator_router",
+    "get_creators_by_fan_router",
+    "get_fans_by_creator_router",
 ]

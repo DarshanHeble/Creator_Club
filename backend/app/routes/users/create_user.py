@@ -4,7 +4,6 @@ from app.firebase import db
 
 router = APIRouter()
 
-
 @router.post("/create", response_model=User)
 async def create_user(user: User):
     """
@@ -18,11 +17,11 @@ async def create_user(user: User):
                     and can be omitted from the request.
 
     Returns:
-        User: The newly created user object, containing only non-None fields
+        User: The newly created user object, containing only non-None fields.
 
     Raises:
         HTTPException: If a user with the same ID already exists (409)
-                        or if a database error occurs (500)
+                       or if a database error occurs (500).
     """
     try:
         # Check if user already exists
@@ -32,9 +31,10 @@ async def create_user(user: User):
         #         status_code=409, detail=f"User with id {user.id} already exists"
         #     )
 
+        # Convert the user object to a dictionary, excluding None values
         user_dict = user.model_dump(by_alias=True)
 
-        # Save the user document to Firestore, excluding fields with None values
+        # Save the user document to Firestore
         user_ref.set({k: v for k, v in user_dict.items() if v is not None})
 
         # Return the created user as a response

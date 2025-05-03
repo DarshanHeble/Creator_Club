@@ -21,7 +21,7 @@ class User(BaseModel):
     - userName: User's display name (optional)
     - email: User's email address for notifications and authentication (optional)
     - password: User's password (optional)
-    - favoriteCreators: List of creator IDs the fan follows (optional)
+    - favouriteCreators: List of creator IDs the fan follows (optional)
     - websiteURL: Creator's personal or professional website (optional)
     """
 
@@ -31,5 +31,6 @@ class User(BaseModel):
     email: Optional[str] = None
     password: Optional[str] = None
     role: UserRole
-    favoriteCreators: Optional[List[str]] = None
+    favouriteCreators : Optional[List[str]] = None
+    fans: Optional[List[str]] = None  
     websiteURL: Optional[str] = None
