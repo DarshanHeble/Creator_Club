@@ -1,4 +1,4 @@
-wimport { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { Box, Button, Flex, Heading, TextArea } from "@radix-ui/themes";
