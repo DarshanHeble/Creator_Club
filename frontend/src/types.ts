@@ -5,6 +5,7 @@ export type User = {
   userName?: string;
   email?: string;
   password?: string;
+  profilePhoto?: string;
   favoriteCreators?: string[];
   websiteURL?: string;
 };
@@ -15,3 +16,13 @@ export type UpdateUser = Omit<
 >;
 
 export type userRole = "creator" | "fan";
+
+export type Quest = {
+  id: string;
+  title: string;
+  description: string;
+  rewards: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  creatorId: string;
+  creatorName: string;
+};
