@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { userService } from "@services/userService";
 
 const Sidebar = ({ userRole }: { userRole: string }) => {
-  const { user, logout } = useAuth();
+  const { privyUser: user, logout } = useAuth();
   const location = useLocation();
   const [userName, setUserName] = useState<string>("");
 
@@ -16,7 +16,7 @@ const Sidebar = ({ userRole }: { userRole: string }) => {
       if (!user?.id) return;
       try {
         const userData = await userService.getUser(user.id);
-        setUserName(userData.userName || "Unknown User");
+        setUserName(userData.userName || "No Username");
       } catch (error) {
         console.error("Failed to fetch user name:", error);
       }
@@ -60,7 +60,7 @@ const Sidebar = ({ userRole }: { userRole: string }) => {
       {userRole === "creator" && (
         <Link
           to={`/user/${user?.id}/upload`}
-          className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="m-4 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 focus:ring-2 focus:ring-blue-400 focus:outline-none"
         >
           <FaPlus />
           Create Post

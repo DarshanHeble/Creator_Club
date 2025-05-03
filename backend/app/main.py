@@ -1,7 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import websocket, base
-from app.routes.users import get_creators_router
 from app.routes.users import (
     create_router,
     update_router,
@@ -11,7 +10,6 @@ from app.routes.users import (
     update_role_router,
     get_creators_router,
     list_users_router,
-    
 )
 
 

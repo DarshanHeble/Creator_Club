@@ -4,7 +4,7 @@ import api from "./api";
 export const userService = {
   async createUser(user: User): Promise<User> {
     try {
-      const response = await api.post<User>("/users/", user);
+      const response = await api.post<User>("/users/create", user);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -14,7 +14,7 @@ export const userService = {
 
   async getUser(userId: string): Promise<User> {
     try {
-      const response = await api.get<User>(`/users/${userId}`);
+      const response = await api.get<User>(`/users/get-user/${userId}`);
       return response.data;
     } catch (error) {
       console.error(error);

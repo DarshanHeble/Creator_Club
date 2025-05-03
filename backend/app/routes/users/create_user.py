@@ -27,10 +27,10 @@ async def create_user(user: User):
     try:
         # Check if user already exists
         user_ref = db.collection("users").document(user.id)
-        if user_ref.get().exists:
-            raise HTTPException(
-                status_code=409, detail=f"User with id {user.id} already exists"
-            )
+        # if user_ref.get().exists:
+        #     raise HTTPException(
+        #         status_code=409, detail=f"User with id {user.id} already exists"
+        #     )
 
         user_dict = user.model_dump(by_alias=True)
 
