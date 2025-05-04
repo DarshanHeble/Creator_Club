@@ -18,9 +18,11 @@ export const useAuth = () => {
     queryFn: async () => {
       if (!privyUser?.id) return null;
       const userData = await userService.getUser(privyUser.id);
+      console.log(userData);
+
       return userData;
     },
-    enabled: false, // Disable automatic fetching until explicitly triggered
+    // enabled: false, // Disable automatic fetching until explicitly triggered
   });
 
   const { login } = useLogin({

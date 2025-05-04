@@ -14,7 +14,7 @@ const DashBoard = () => {
   const { user, authenticated, logout } = useAuth();
   const navigate = useNavigate();
 
-  console.log(user);
+  // console.log(user, authenticated);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<{

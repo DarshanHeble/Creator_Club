@@ -4,10 +4,17 @@ import { FaEdit, FaSave, FaCamera } from "react-icons/fa";
 import { userService } from "@services/userService";
 import { useAuth } from "@hooks/useAuth";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "@components/Loading";
+
+interface ProfileProps {
+  userId: string;
+}
 
 const Profile: React.FC<ProfileProps> = () => {
   const { userId } = useParams();
+
   const { user, authenticated, ready } = useAuth();
   const navigate = useNavigate();
 
@@ -19,25 +26,45 @@ const Profile: React.FC<ProfileProps> = () => {
     }
   }, [authenticated, navigate, ready]);
 
-  useEffect(() => {
-    // refetchUser(); // Fetch user data when the component mounts
-    setFormData({
-      userName: user?.userName || "",
-      email: user?.email || "",
-      bio: user?.bio || "",
-      profilePhoto: user?.profilePhoto || "",
-    });
-  }, [user]);
-
   const [formData, setFormData] = useState({
-    userName: user?.userName || "",
-    email: user?.email || "",
-    bio: user?.bio || "",
-    profilePhoto: user?.profilePhoto || "",
+    userName: "",
+    email: "",
+    bio: "",
+    profilePhoto: "",
   });
+
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [posts] = useState([]); // State to store posts
+
+  // Fetch user data using react-query
+  const {
+    data: fetchedUser,
+    isLoading,
+    error,
+  } = useQuery(
+    {
+      queryKey: ["user", userId],
+      queryFn: async () => {
+        if (!userId) return null;
+        const userData = await userService.getUser(userId);
+        return userData;
+      },
+      enabled: !!userId,
+    }, // Ensure the query is only triggered if userId exists
+  );
+  console.log(fetchedUser, "Fetched User Data");
+
+  useEffect(() => {
+    if (fetchedUser) {
+      setFormData({
+        userName: fetchedUser.userName || "",
+        email: fetchedUser.email || "",
+        bio: fetchedUser.bio || "",
+        profilePhoto: fetchedUser.profilePhoto || "",
+      });
+    }
+  }, [fetchedUser]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -82,8 +109,17 @@ const Profile: React.FC<ProfileProps> = () => {
       toast("Failed to update profile. Please try again.");
     }
   };
+  const isCurrentUser = user?.id === userId; // Check if the logged-in user is the same as the profile user
 
   const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${formData.userName || "default"}`;
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader />
+      </div>
+    );
+  if (error) return <Text>Failed to load user data</Text>;
 
   return (
     <Flex
@@ -126,62 +162,64 @@ const Profile: React.FC<ProfileProps> = () => {
           </Flex>
 
           {/* Edit Info Dialog */}
-          <Dialog.Root>
-            <Dialog.Trigger>
-              <Button variant="soft" color="blue" className="mt-4">
-                <FaEdit />
-                Edit Profile
-              </Button>
-            </Dialog.Trigger>
-            <Dialog.Content className="max-w-md p-6">
-              <Dialog.Title>Edit Profile</Dialog.Title>
-              <Dialog.Description>
-                Update your profile information below.
-              </Dialog.Description>
-              <Flex direction="column" gap="4" className="mt-4">
-                <label>
-                  Username
-                  <input
-                    type="text"
-                    name="userName"
-                    value={formData.userName}
-                    onChange={handleChange}
-                    className="w-full rounded border p-2 dark:bg-zinc-800"
-                  />
-                </label>
-                <label>
-                  Email
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full rounded border p-2 dark:bg-zinc-800"
-                  />
-                </label>
-                <label>
-                  Bio
-                  <textarea
-                    name="bio"
-                    value={formData.bio}
-                    onChange={handleChange}
-                    className="w-full rounded border p-2 dark:bg-zinc-800"
-                  />
-                </label>
-              </Flex>
-              <Flex justify="end" className="mt-6 gap-4">
-                <Dialog.Close>
-                  <Button variant="soft">Cancel</Button>
-                </Dialog.Close>
-                <Dialog.Close>
-                  <Button variant="soft" color="green" onClick={handleSave}>
-                    <FaSave />
-                    Save
-                  </Button>
-                </Dialog.Close>
-              </Flex>
-            </Dialog.Content>
-          </Dialog.Root>
+          {isCurrentUser && (
+            <Dialog.Root>
+              <Dialog.Trigger>
+                <Button variant="soft" color="blue" className="mt-4">
+                  <FaEdit />
+                  Edit Profile
+                </Button>
+              </Dialog.Trigger>
+              <Dialog.Content className="max-w-md p-6">
+                <Dialog.Title>Edit Profile</Dialog.Title>
+                <Dialog.Description>
+                  Update your profile information below.
+                </Dialog.Description>
+                <Flex direction="column" gap="4" className="mt-4">
+                  <label>
+                    Username
+                    <input
+                      type="text"
+                      name="userName"
+                      value={formData.userName}
+                      onChange={handleChange}
+                      className="w-full rounded border p-2 dark:bg-zinc-800"
+                    />
+                  </label>
+                  <label>
+                    Email
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full rounded border p-2 dark:bg-zinc-800"
+                    />
+                  </label>
+                  <label>
+                    Bio
+                    <textarea
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleChange}
+                      className="w-full rounded border p-2 dark:bg-zinc-800"
+                    />
+                  </label>
+                </Flex>
+                <Flex justify="end" className="mt-6 gap-4">
+                  <Dialog.Close>
+                    <Button variant="soft">Cancel</Button>
+                  </Dialog.Close>
+                  <Dialog.Close>
+                    <Button variant="soft" color="green" onClick={handleSave}>
+                      <FaSave />
+                      Save
+                    </Button>
+                  </Dialog.Close>
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
+          )}
         </Flex>
       </Box>
 

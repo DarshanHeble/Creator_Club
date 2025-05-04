@@ -2,22 +2,22 @@ import { FaCog, FaTasks, FaSignOutAlt, FaPlus } from "react-icons/fa";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
-import { userService } from "@services/userService";
-import { useQuery } from "@tanstack/react-query";
+// import { userService } from "@services/userService";
+// import { useQuery } from "@tanstack/react-query";
 
 const Sidebar = () => {
-  const { privyUser, logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
-  const { data: user } = useQuery({
-    queryKey: ["user", privyUser?.id],
-    queryFn: async () => {
-      if (!privyUser?.id) return;
-      const userData = await userService.getUser(privyUser.id);
-      return userData;
-    },
-    enabled: !!privyUser?.id,
-  });
+  // const { data: user } = useQuery({
+  //   queryKey: ["user", privyUser?.id],
+  //   queryFn: async () => {
+  //     if (!privyUser?.id) return;
+  //     const userData = await userService.getUser(privyUser.id);
+  //     return userData;
+  //   },
+  //   enabled: !!privyUser?.id,
+  // });
 
   const links = [
     {
