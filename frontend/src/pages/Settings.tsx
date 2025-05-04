@@ -8,10 +8,13 @@ import { FaPalette, FaShieldAlt, FaExchangeAlt } from "react-icons/fa";
 import { userRole } from "@/types";
 import { toast } from "sonner";
 
+import { useTheme } from "@components/theme/ThemeProvider";
+
 const Settings = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState<userRole>("fan");
+  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -77,6 +80,16 @@ const Settings = () => {
       >
         Settings
       </Heading>
+      <Button
+        onClick={() => {
+          console.log(theme, "Theme");
+
+          toast.info("hello world");
+        }}
+      >
+        send
+      </Button>
+      {theme}
 
       {/* Theme Settings */}
       <Box className="mb-8">
