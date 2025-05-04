@@ -30,8 +30,6 @@ export const useAuth = () => {
       if (ready && authenticated && privyUser) {
         navigate(`/user/${privyUser?.id}/dashboard`);
 
-        console.log(privyUser.wallet?.chainType);
-
         userService
           .createUser({
             id: privyUser.id,
@@ -39,7 +37,7 @@ export const useAuth = () => {
             role: "fan",
           })
           .then(() => {
-            toast("User Created Successfully");
+            toast.success("User Created Successfully");
             refetchUser(); // Fetch user data after successful creation
           });
       }
@@ -49,6 +47,7 @@ export const useAuth = () => {
   const { logout } = useLogout({
     onSuccess() {
       navigate("/");
+      toast.info("User logged Out");
     },
   });
 

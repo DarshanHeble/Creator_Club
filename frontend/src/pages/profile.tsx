@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Dialog, Flex, Heading, Text } from "@radix-ui/themes";
-import { FaEdit, FaSave, FaCamera } from "react-icons/fa";
+import { FaEdit, FaSave } from "react-icons/fa";
+import { MdOutlineEdit } from "react-icons/md";
 import { userService } from "@services/userService";
 import { useAuth } from "@hooks/useAuth";
 import { toast } from "sonner";
@@ -147,7 +148,7 @@ const Profile: React.FC<ProfileProps> = () => {
             )}
             {/* Camera Icon on Hover */}
             <div className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100">
-              <FaCamera
+              <MdOutlineEdit
                 className="cursor-pointer text-2xl text-white"
                 onClick={() => setIsPhotoDialogOpen(true)}
               />
