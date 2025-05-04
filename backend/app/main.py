@@ -51,4 +51,3 @@ app.include_router(unfollow_creator_router, prefix="/users", tags=["users"])
 app.include_router(bulk_create_router, prefix="/users", tags=["users"])
 app.include_router(get_creators_by_fan_router, prefix="/users", tags=["users"])
 app.include_router(get_fans_by_creator_router, prefix="/users", tags=["users"])
-

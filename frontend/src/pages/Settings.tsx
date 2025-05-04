@@ -5,11 +5,13 @@ import { userService } from "@services/userService";
 import { useAuth } from "@hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { FaPalette, FaShieldAlt, FaExchangeAlt } from "react-icons/fa";
+import { userRole } from "@/types";
+import { toast } from "sonner";
 
 const Settings = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState<string>("");
+  const [userRole, setUserRole] = useState<userRole>("fan");
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -58,18 +60,21 @@ const Settings = () => {
     try {
       const newRole = userRole === "creator" ? "fan" : "creator";
       await userService.updateUserRole(user.id, newRole);
-      alert(`Your role has been updated to ${newRole}.`);
+      toast(`Your role has been updated to ${newRole}.`);
       setUserRole(newRole);
       navigate(`/user/${user.id}/dashboard`);
     } catch (error) {
       console.error("Failed to update role:", error);
-      alert("Failed to update your role. Please try again.");
+      toast("Failed to update your role. Please try again.");
     }
   };
 
   return (
-    <Box className="max-w-4xl mx-auto p-6">
-      <Heading size="5" className="mb-8 text-center text-2xl font-bold text-zinc-800 dark:text-zinc-200">
+    <Box className="mx-auto max-w-4xl p-6">
+      <Heading
+        size="5"
+        className="mb-8 text-center text-2xl font-bold text-zinc-800 dark:text-zinc-200"
+      >
         Settings
       </Heading>
 
@@ -77,7 +82,10 @@ const Settings = () => {
       <Box className="mb-8">
         <Flex align="center" gap="2" className="mb-4">
           <FaPalette className="text-lg text-blue-500" />
-          <Heading size="4" className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+          <Heading
+            size="4"
+            className="text-lg font-semibold text-zinc-800 dark:text-zinc-200"
+          >
             Appearance
           </Heading>
         </Flex>
@@ -97,16 +105,20 @@ const Settings = () => {
       <Box className="mb-8">
         <Flex align="center" gap="2" className="mb-4">
           <FaExchangeAlt className="text-lg text-blue-500" />
-          <Heading size="4" className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+          <Heading
+            size="4"
+            className="text-lg font-semibold text-zinc-800 dark:text-zinc-200"
+          >
             Role Conversion
           </Heading>
         </Flex>
         <Box className="rounded-lg border border-zinc-200 bg-white p-6 shadow-md dark:border-zinc-800 dark:bg-zinc-900">
           <Flex direction="column" gap="4">
             <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-              You are currently a <strong>{userRole}</strong>. Click the button below to switch your role.
+              You are currently a <strong>{userRole}</strong>. Click the button
+              below to switch your role.
               {userRole === "creator" && (
-                <span className="block mt-2 text-sm font-medium text-red-500">
+                <span className="mt-2 block text-sm font-medium text-red-500">
                   Warning: Switching to Fan is irreversible.
                 </span>
               )}
@@ -114,7 +126,7 @@ const Settings = () => {
             <Button
               color="blue"
               variant="soft"
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               onClick={handleRoleConversion}
             >
               Switch to {userRole === "creator" ? "Fan" : "Creator"}
@@ -127,19 +139,23 @@ const Settings = () => {
       <Box className="mb-8">
         <Flex align="center" gap="2" className="mb-4">
           <FaShieldAlt className="text-lg text-blue-500" />
-          <Heading size="4" className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+          <Heading
+            size="4"
+            className="text-lg font-semibold text-zinc-800 dark:text-zinc-200"
+          >
             Account Management
           </Heading>
         </Flex>
         <Box className="rounded-lg border border-zinc-200 bg-white p-6 shadow-md dark:border-zinc-800 dark:bg-zinc-900">
           <Flex direction="column" gap="4">
             <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-              Manage your account settings. You can delete your account permanently.
+              Manage your account settings. You can delete your account
+              permanently.
             </Text>
             <Button
               color="red"
               variant="soft"
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="w-full rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:outline-none"
               onClick={handleDeleteAccount}
             >
               Delete Account

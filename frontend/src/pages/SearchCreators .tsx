@@ -83,14 +83,18 @@ const SearchCreators = () => {
 
   const [filteredCreators, setFilteredCreators] = useState([]); // State for filtered creators
 
-  // Dummy data for creators
-  const creators = [
-    { id: 1, name: "John Doe", bio: "Tech reviewer and content creator." },
-    { id: 2, name: "Jane Smith", bio: "Travel and lifestyle vlogger." },
-    { id: 3, name: "Mike Johnson", bio: "Fitness and health enthusiast." },
-    { id: 4, name: "Emily Davis", bio: "Food blogger and recipe creator." },
-    { id: 5, name: "Chris Lee", bio: "Gaming and esports streamer." },
-  ];
+  // Fetch creators using react-query
+  const {
+    data: creators = [],
+    isLoading,
+    isError,
+  } = useQuery<User[]>({
+    queryKey: ["creators"],
+    queryFn: async () => {
+      const response = await userService.getCreators();
+      return response;
+    },
+  });
 
   useEffect(() => {
     // Retrieve the search query from the navigation state

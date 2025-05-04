@@ -1,191 +1,241 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
-import { FaEdit, FaCamera } from "react-icons/fa";
+import { Box, Button, Dialog, Flex, Heading, Text } from "@radix-ui/themes";
+import { FaEdit, FaSave, FaCamera } from "react-icons/fa";
+import { userService } from "@services/userService";
 import { useAuth } from "@hooks/useAuth";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore"; // Firebase imports
-// import { db } from "../services/firebase"; // Firebase configuration
 
-const Profile = () => {
+const Profile: React.FC<ProfileProps> = () => {
+  const { userId } = useParams();
   const { user, authenticated, ready } = useAuth();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    userName: "",
-    email: "",
-    bio: "",
-    profilePhoto: "",
-    bannerPhoto: "",
-    followers: 0,
-    connections: 0,
-    posts: 0,
-  });
-  const [posts, setPosts] = useState([]); // Dummy posts data
-  const [isFollowing, setIsFollowing] = useState(false); // Follow state
-
-  // Redirect to login if the user is not authenticated
   useEffect(() => {
+    // Check if the user is authenticated
+    // If not, redirect to the login page
     if (!authenticated && ready) {
       navigate("/");
     }
   }, [authenticated, navigate, ready]);
 
-  // Fetch user data from Firebase
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (user?.id) {
-        const userDoc = doc(db, "users", user.id);
-        const userSnapshot = await getDoc(userDoc);
-
-        if (userSnapshot.exists()) {
-          const userData = userSnapshot.data();
-          setFormData({
-            userName: userData.userName || "",
-            email: userData.email || "",
-            bio: userData.bio || "",
-            profilePhoto: userData.profilePhoto || "",
-            bannerPhoto: userData.bannerPhoto || "",
-            followers: userData.followers || 0,
-            connections: userData.connections || 0,
-            posts: userData.posts || 0,
-          });
-          setPosts(userData.posts || []);
-        }
-      }
-    };
-
-    fetchUserData();
+    // refetchUser(); // Fetch user data when the component mounts
+    setFormData({
+      userName: user?.userName || "",
+      email: user?.email || "",
+      bio: user?.bio || "",
+      profilePhoto: user?.profilePhoto || "",
+    });
   }, [user]);
 
-  // Handle follow/unfollow
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
-    // Add logic to update followers count in Firebase
+  const [formData, setFormData] = useState({
+    userName: user?.userName || "",
+    email: user?.email || "",
+    bio: user?.bio || "",
+    profilePhoto: user?.profilePhoto || "",
+  });
+  const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [posts] = useState([]); // State to store posts
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedPhoto(e.target.files[0]);
+    }
+  };
+
+  const handlePhotoUpload = async () => {
+    if (!user?.id || !selectedPhoto) return;
+    try {
+      // const photoUrl = await userService.uploadProfilePhoto(
+      //   user.id,
+      //   selectedPhoto,
+      // );
+      // setFormData({ ...formData, profilePhoto: photoUrl });
+      alert("Profile photo updated successfully!");
+      setIsPhotoDialogOpen(false);
+    } catch (error) {
+      console.error("Failed to update profile photo:", error);
+      alert("Failed to update photo. Please try again.");
+    }
+  };
+
+  const handleSave = async () => {
+    if (!user?.id) return;
+    try {
+      const updatedData = {
+        userName: formData.userName,
+        email: formData.email,
+        bio: formData.bio,
+      };
+      await userService.updateUser(user.id, updatedData);
+      toast("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast("Failed to update profile. Please try again.");
+    }
   };
 
   const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${formData.userName || "default"}`;
 
   return (
-    <Flex direction="column" align="center" className="min-h-screen p-6">
-      {/* Banner Section */}
-      <Box className="relative w-full max-w-5xl rounded-lg overflow-hidden shadow-lg">
-        <img
-          src={formData.bannerPhoto || "https://via.placeholder.com/1200x300"}
-          alt="Banner"
-          className="h-48 w-full object-cover"
-        />
-        <div className="absolute bottom-[-36px] left-6">
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      className="min-h-screen p-6"
+    >
+      <Box className="w-full max-w-4xl rounded-lg p-8 shadow-xl dark:bg-zinc-900">
+        <Flex direction="row" align="center" gap="6">
+          {/* Profile Photo Section */}
           <div className="relative h-36 w-36">
+            {formData.profilePhoto ? (
+              <img
+                src={formData.profilePhoto}
+                alt="Profile"
+                className="h-full w-full rounded-full object-cover"
+              />
+            ) : (
+              <img
+                src={avatarUrl}
+                alt="Generated Avatar"
+                className="h-full w-full rounded-full object-cover"
+              />
+            )}
+            {/* Camera Icon on Hover */}
             <div className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100">
-              <FaCamera className="text-2xl text-white" />
+              <FaCamera
+                className="cursor-pointer text-2xl text-white"
+                onClick={() => setIsPhotoDialogOpen(true)}
+              />
             </div>
           </div>
-        </div>
-      </Box>
 
-      {/* Profile Info Section */}
-      <Box className="mt-16 w-full max-w-5xl rounded-lg bg-white p-8 shadow-lg dark:bg-zinc-900">
-  <Flex direction="row" align="center" gap="6">
-    {/* Profile Photo */}
-    <div className="relative h-36 w-36">
-      <img
-        src={formData.profilePhoto || avatarUrl}
-        alt="Profile"
-        className="h-full w-full rounded-full object-cover border-4 border-white shadow-md dark:border-zinc-900"
-      />
-      <div className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100">
-        <FaCamera className="text-2xl text-white" />
-      </div>
-    </div>
+          {/* User Info Section */}
+          <Flex direction="column" align="center" gap="2">
+            <Heading size="4">{formData.userName || "No Username"}</Heading>
+            <Text>{formData.email || "No Email"}</Text>
+            <Text>{formData.bio || "No Bio"}</Text>
+          </Flex>
 
-    {/* User Info and Actions */}
-    <Flex direction="column" align="start" gap="4" className="flex-1">
-      {/* User Info */}
-      <Heading size="4" className="text-zinc-800 dark:text-zinc-200">
-        {formData.userName || "No Username"}
-      </Heading>
-      <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-        {formData.bio || "No Bio"}
-      </Text>
-
-      {/* Action Buttons */}
-      <Flex gap="4">
-        <Button
-          variant="soft"
-          color={isFollowing ? "gray" : "blue"}
-          onClick={handleFollow}
-          className="px-6"
-        >
-          {isFollowing ? "Unfollow" : "Follow"}
-        </Button>
-        <Button
-          variant="soft"
-          color="blue"
-          onClick={() => alert("Edit Profile")}
-          className="px-6"
-        >
-          <FaEdit className="mr-2" />
-          Edit Profile
-        </Button>
-      </Flex>
-    </Flex>
-  </Flex>
-</Box>
-      <Box className="mt-6 w-full max-w-5xl rounded-lg bg-white p-6 shadow-lg dark:bg-zinc-900">
-        <Flex justify="around" className="text-center">
-          <Box>
-            <Heading size="4" className="text-zinc-800 dark:text-zinc-200">
-              {formData.followers}
-            </Heading>
-            <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-              Followers
-            </Text>
-          </Box>
-          <Box>
-            <Heading size="4" className="text-zinc-800 dark:text-zinc-200">
-              {formData.connections}
-            </Heading>
-            <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-              Connections
-            </Text>
-          </Box>
-          <Box>
-            <Heading size="4" className="text-zinc-800 dark:text-zinc-200">
-              {formData.posts}
-            </Heading>
-            <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-              Posts
-            </Text>
-          </Box>
+          {/* Edit Info Dialog */}
+          <Dialog.Root>
+            <Dialog.Trigger>
+              <Button variant="soft" color="blue" className="mt-4">
+                <FaEdit />
+                Edit Profile
+              </Button>
+            </Dialog.Trigger>
+            <Dialog.Content className="max-w-md p-6">
+              <Dialog.Title>Edit Profile</Dialog.Title>
+              <Dialog.Description>
+                Update your profile information below.
+              </Dialog.Description>
+              <Flex direction="column" gap="4" className="mt-4">
+                <label>
+                  Username
+                  <input
+                    type="text"
+                    name="userName"
+                    value={formData.userName}
+                    onChange={handleChange}
+                    className="w-full rounded border p-2 dark:bg-zinc-800"
+                  />
+                </label>
+                <label>
+                  Email
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full rounded border p-2 dark:bg-zinc-800"
+                  />
+                </label>
+                <label>
+                  Bio
+                  <textarea
+                    name="bio"
+                    value={formData.bio}
+                    onChange={handleChange}
+                    className="w-full rounded border p-2 dark:bg-zinc-800"
+                  />
+                </label>
+              </Flex>
+              <Flex justify="end" className="mt-6 gap-4">
+                <Dialog.Close>
+                  <Button variant="soft">Cancel</Button>
+                </Dialog.Close>
+                <Dialog.Close>
+                  <Button variant="soft" color="green" onClick={handleSave}>
+                    <FaSave />
+                    Save
+                  </Button>
+                </Dialog.Close>
+              </Flex>
+            </Dialog.Content>
+          </Dialog.Root>
         </Flex>
       </Box>
 
+      {/* Profile Photo Dialog */}
+      {isPhotoDialogOpen && (
+        <Dialog.Root
+          open={isPhotoDialogOpen}
+          onOpenChange={setIsPhotoDialogOpen}
+        >
+          <Dialog.Content className="max-w-sm p-6">
+            <Dialog.Title>Update Profile Photo</Dialog.Title>
+            <Dialog.Description>
+              Select a new profile photo to upload.
+            </Dialog.Description>
+            <Flex direction="column" gap="4" className="mt-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+              />
+            </Flex>
+            <Flex justify="end" className="mt-6 gap-4">
+              <Dialog.Close>
+                <Button variant="ghost">Cancel</Button>
+              </Dialog.Close>
+              <Button variant="soft" color="green" onClick={handlePhotoUpload}>
+                <FaSave />
+                Upload
+              </Button>
+            </Flex>
+          </Dialog.Content>
+        </Dialog.Root>
+      )}
+
       {/* Posts Section */}
-      <Box className="mt-6 w-full max-w-5xl rounded-lg bg-white p-6 shadow-lg dark:bg-zinc-900">
+      <Box className="mt-8 w-full max-w-4xl flex-1 rounded-lg bg-white p-4 shadow-xl dark:bg-zinc-900">
         <Heading
           size="4"
-          align="left"
-          className="mb-6 text-lg font-bold text-zinc-800 dark:text-zinc-200"
+          align={"left"}
+          className="mb-6 text-center text-lg font-bold text-zinc-800 dark:text-zinc-200"
         >
           Posts
         </Heading>
         <Flex wrap="wrap" gap="6" justify="center">
-          {posts.length > 0 ? (
-            posts.map((post, index) => (
-              <Box
-                key={index}
-                className="aspect-square w-1/3 overflow-hidden rounded-lg bg-gray-300 shadow-md transition-transform duration-300 hover:scale-105 dark:bg-zinc-700"
-              >
-                <Text className="p-4 text-sm text-zinc-800 dark:text-zinc-200">
-                  {post.content || "No Content"}
-                </Text>
-              </Box>
-            ))
-          ) : (
-            <Text className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-              No posts available.
-            </Text>
-          )}
+          {posts.map((post, index) => (
+            <Box
+              key={index}
+              className="aspect-square w-1/3 overflow-hidden rounded-lg bg-gray-300 shadow-md transition-transform duration-300 hover:scale-105 dark:bg-zinc-700"
+            >
+              <Text className="p-4 text-sm text-zinc-800 dark:text-zinc-200">
+                {post.content || "No Content"}
+              </Text>
+            </Box>
+          ))}
         </Flex>
       </Box>
     </Flex>

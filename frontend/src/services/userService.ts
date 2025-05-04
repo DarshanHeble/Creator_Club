@@ -60,36 +60,14 @@ export const userService = {
       throw new Error("Failed to check username");
     }
   },
+
+  async getCreators(): Promise<User[]> {
+    try {
+      const response = await api.get(`/users/creators`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to check username");
+    }
+  },
 };
-
-// Example usage:
-// import { userService } from '@/services/userService';
-
-// // Create user
-// try {
-//   const newUser = await userService.createUser({
-//     id: "user123",
-//     walletAddress: '0x...',
-//     userName: 'john_doe',
-//     role: 'fan',
-//   });
-//   console.log('User created:', newUser);
-// } catch (error) {
-//   console.error('Failed to create user:', error.message);
-// }
-
-// // Get user
-// try {
-//   const user = await userService.getUser('user123');
-//   console.log('User fetched:', user);
-// } catch (error) {
-//   console.error('Failed to fetch user:', error.message);
-// }
-
-// // Check username
-// try {
-//   const isTaken = await userService.isUsernameTaken('john_doe');
-//   console.log('Username is taken:', isTaken);
-// } catch (error) {
-//   console.error('Failed to check username:', error.message);
-// }
