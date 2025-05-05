@@ -9,11 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@components/Loading";
 
-interface ProfileProps {
-  userId: string;
-}
-
-const Profile: React.FC<ProfileProps> = () => {
+const Profile = () => {
   const { userId } = useParams();
 
   const { user, authenticated, ready } = useAuth();
