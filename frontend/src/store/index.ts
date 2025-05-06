@@ -1,4 +1,4 @@
-import { Quest } from "src/types";
+import { Quest } from "@/types";
 
 // This would typically come from your backend API
 export const mockQuestTemplates: Omit<Quest, "creatorId" | "creatorName">[] = [

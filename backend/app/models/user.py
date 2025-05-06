@@ -8,6 +8,20 @@ class UserRole(str, Enum):
     creator = "creator"
 
 
+class QuestDifficulty(str, Enum):
+    easy = "easy"
+    medium = "medium"
+    hard = "hard"
+
+
+class Quest(BaseModel):
+    id: str = None
+    title: str = None
+    description: str = None
+    rewards: str = None
+    difficulty: QuestDifficulty = None
+
+
 class User(BaseModel):
     """
     Represents a user in the Creator Club platform.
@@ -21,7 +35,7 @@ class User(BaseModel):
     - userName: User's display name (optional)
     - email: User's email address for notifications and authentication (optional)
     - password: User's password (optional)
-    - favouriteCreators: List of creator IDs the fan follows (optional)
+    - favoriteCreators: List of creator IDs the fan follows (optional)
     - websiteURL: Creator's personal or professional website (optional)
     """
 
@@ -31,6 +45,7 @@ class User(BaseModel):
     email: Optional[str] = None
     password: Optional[str] = None
     role: UserRole
-    favouriteCreators : Optional[List[str]] = None
-    fans: Optional[List[str]] = None  
+    favoriteCreators: Optional[List[str]] = None
+    fans: Optional[List[str]] = None
     websiteURL: Optional[str] = None
+    quests: Optional[List[QuestDifficulty]] = None

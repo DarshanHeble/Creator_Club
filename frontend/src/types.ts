@@ -9,26 +9,28 @@ export type User = {
   profilePhoto?: string;
   favoriteCreators?: string[];
   websiteURL?: string;
+  quests?: Quest[];
 };
 
-// type Wallet = {
-//   walletAddress: string;
-//   chainType: "ethereum" | "solana" | undefined;
-// };
-
-export type UpdateUser = Omit<
-  User,
-  "id" | "walletAddress" | "password" | "role" | "profilePhoto"
->;
-
 export type userRole = "creator" | "fan";
+export type QuestDifficulty = "easy" | "medium" | "hard";
 
 export type Quest = {
   id: string;
   title: string;
   description: string;
   rewards: string;
-  difficulty: "Easy" | "Medium" | "Hard";
+  difficulty: QuestDifficulty;
   creatorId: string;
   creatorName: string;
 };
+
+export type UpdateUser = Omit<
+  User,
+  "id" | "walletAddress" | "password" | "role" | "profilePhoto"
+>;
+
+// type Wallet = {
+//   walletAddress: string;
+//   chainType: "ethereum" | "solana" | undefined;
+// };
