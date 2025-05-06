@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@components/Loading";
+import { uploadToCloudinary } from "@services/CloudinaryServices";
 
 const Profile = () => {
   const { userId } = useParams();
@@ -76,18 +77,28 @@ const Profile = () => {
   };
 
   const handlePhotoUpload = async () => {
-    if (!user?.id || !selectedPhoto) return;
+      if (!selectedPhoto) return;
+
     try {
-      // const photoUrl = await userService.uploadProfilePhoto(
-      //   user.id,
-      //   selectedPhoto,
-      // );
-      // setFormData({ ...formData, profilePhoto: photoUrl });
-      alert("Profile photo updated successfully!");
+      // Upload the photo to Cloudinary
+      const response = await uploadToCloudinary(selectedPhoto);
+
+      // Log the full response if needed
+      console.log("Cloudinary Response:", response);
+
+      // Update the formData with the raw response or any specific field if needed
+      setFormData({ ...formData, profilePhoto: response });
+
+      // Optionally, update the user's profile photo in the backend
+      if (user?.id) {
+        await userService.updateUser(user.id, { profilePhoto: response });
+        toast("Profile photo updated successfully!");
+      }
+
       setIsPhotoDialogOpen(false);
     } catch (error) {
-      console.error("Failed to update profile photo:", error);
-      alert("Failed to update photo. Please try again.");
+      console.error("Failed to upload profile photo:", error);
+      toast("Failed to upload photo. Please try again.");
     }
   };
 
