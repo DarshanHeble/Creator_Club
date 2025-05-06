@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import websocket, base
+from app.middleware.exception import ExceptionHandlerMiddleware
 from app.routes.users import (
     create_router,
     update_router,
@@ -26,6 +27,7 @@ frontend_url = "http://localhost:5173"
 # Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
+    ExceptionHandlerMiddleware,
     allow_origins=["*"],
     # allow_origins=[frontend_url],
     allow_credentials=True,

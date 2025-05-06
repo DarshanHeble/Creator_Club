@@ -4,6 +4,7 @@ from app.firebase import db
 
 router = APIRouter()
 
+
 @router.post("/create", response_model=User)
 async def create_user(user: User):
     """

@@ -1,25 +1,12 @@
-from typing import List, Optional
+from typing import Optional
 from pydantic import BaseModel
 from enum import Enum
+from app.models.quest import Quest
 
 
 class UserRole(str, Enum):
     fan = "fan"
     creator = "creator"
-
-
-class QuestDifficulty(str, Enum):
-    easy = "easy"
-    medium = "medium"
-    hard = "hard"
-
-
-class Quest(BaseModel):
-    id: str = None
-    title: str = None
-    description: str = None
-    rewards: str = None
-    difficulty: QuestDifficulty = None
 
 
 class User(BaseModel):
@@ -45,7 +32,7 @@ class User(BaseModel):
     email: Optional[str] = None
     password: Optional[str] = None
     role: UserRole
-    favoriteCreators: Optional[List[str]] = None
-    fans: Optional[List[str]] = None
+    favoriteCreators: Optional[list[str]] = None
+    fans: Optional[list[str]] = None
     websiteURL: Optional[str] = None
-    quests: Optional[List[QuestDifficulty]] = None
+    quests: Optional[list[Quest]] = None
