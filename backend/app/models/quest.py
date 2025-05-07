@@ -35,4 +35,3 @@ class Quest(BaseModel):
     actionType: QuestActionType
     difficulty: QuestDifficulty
     link: Optional[str] = None  # URL associated with the quest
-    completedBy: Optional[list[str]] = []  # List of user IDs who completed the quest

@@ -10,6 +10,7 @@ export type User = {
   favoriteCreators?: string[];
   websiteURL?: string;
   quests?: Quest[];
+  completedQuests?: string[];
 };
 
 export type userRole = "creator" | "fan";

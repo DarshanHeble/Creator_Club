@@ -36,3 +36,4 @@ class User(BaseModel):
     fans: Optional[list[str]] = None
     websiteURL: Optional[str] = None
     quests: Optional[list[Quest]] = None
+    completedQuests: Optional[list[str]] = None
