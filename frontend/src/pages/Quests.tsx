@@ -7,41 +7,60 @@ import {
   Flex,
   Grid,
   Heading,
+  Select,
   Text,
+  TextArea,
+  TextField,
 } from "@radix-ui/themes";
 import { FaPlus } from "react-icons/fa";
-import { usePrivy } from "@privy-io/react-auth";
-import { Quest } from "src/types";
-import { mockQuestTemplates } from "@store/index";
+import { Quest, QuestAction, QuestDifficulty } from "@/types";
+import { useAuth } from "@hooks/useAuth";
 
 const Quests = () => {
-  const { user } = usePrivy();
+  const { user } = useAuth();
   const { userId } = useParams();
   const [isCreator, setIsCreator] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedQuests, setSelectedQuests] = useState<Quest[]>([]);
+  const [newQuest, setNewQuest] = useState({
+    title: "",
+    description: "",
+    rewards: "",
+    questAction: "like" as QuestAction,
+    difficulty: "easy" as QuestDifficulty,
+    link: "",
+  });
 
-  // In a real app, you would fetch the user's role from your backend
   useEffect(() => {
-    // Simulating checking if the current user is the creator
     setIsCreator(user?.id === userId);
   }, [user, userId]);
 
-  const handleAddQuest = (
-    questTemplate: Omit<Quest, "creatorId" | "creatorName">,
+  const handleInputChange = (
+    key: keyof typeof newQuest,
+    value: string | QuestAction | QuestDifficulty,
   ) => {
+    setNewQuest({ ...newQuest, [key]: value });
+  };
+
+  const handleCreateQuest = () => {
     if (!user) return;
 
-    const newQuest: Quest = {
-      ...questTemplate,
+    const quest: Quest = {
+      id: crypto.randomUUID(),
       creatorId: user.id,
-      creatorName:
-        typeof user.email === "string" ? user.email : "Unknown Creator",
+      creatorName: user.userName || user.email || "Unknown Creator",
+      ...newQuest,
     };
 
-    if (!selectedQuests.some((q) => q.id === newQuest.id)) {
-      setSelectedQuests([...selectedQuests, newQuest]);
-    }
+    setSelectedQuests([...selectedQuests, quest]);
+    setNewQuest({
+      title: "",
+      description: "",
+      rewards: "",
+      questAction: "like",
+      difficulty: "easy",
+      link: "",
+    });
     setIsModalOpen(false);
   };
 
@@ -85,9 +104,9 @@ const Quests = () => {
               {quest.description}
             </Text>
             <Flex direction="column" gap="2">
-              <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+              {/* <Text className="text-sm text-zinc-500 dark:text-zinc-400">
                 Created by {quest.creatorName}
-              </Text>
+              </Text> */}
               <Flex justify="between" align="center">
                 <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">
                   {quest.rewards}
@@ -105,45 +124,83 @@ const Quests = () => {
         ))}
       </Grid>
 
-      {/* Quest Selection Modal - Only shown for creators */}
+      {/* Create Quest Modal */}
       {isCreator && (
         <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
           <Dialog.Content>
             <Dialog.Title>Create a New Quest</Dialog.Title>
             <Dialog.Description mb="4">
-              Choose a quest template to customize for your fans
+              Fill in the details to create a new quest for your fans.
             </Dialog.Description>
 
             <Flex direction="column" gap="3">
-              {mockQuestTemplates
-                .filter(
-                  (quest) => !selectedQuests.some((q) => q.id === quest.id),
-                )
-                .map((quest) => (
-                  <Box
-                    key={quest.id}
-                    className="cursor-pointer rounded-lg border border-zinc-200 bg-white p-4 transition-colors hover:border-blue-500 dark:border-zinc-800 dark:bg-zinc-900"
-                    onClick={() => handleAddQuest(quest)}
-                  >
-                    <Text className="mb-2 font-semibold">{quest.title}</Text>
-                    <br />
-                    <Text className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-                      {quest.description}
-                    </Text>
-                    <Flex justify="between" align="center">
-                      <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                        {quest.rewards}
-                      </Text>
-                      <Text
-                        className={`rounded-full px-2 py-1 text-xs font-medium ${getDifficultyColor(
-                          quest.difficulty,
-                        )}`}
-                      >
-                        {quest.difficulty}
-                      </Text>
-                    </Flex>
-                  </Box>
-                ))}
+              <TextField.Root
+                placeholder="Quest Title"
+                value={newQuest.title}
+                onChange={(e) => handleInputChange("title", e.target.value)}
+              >
+                <TextField.Slot></TextField.Slot>
+              </TextField.Root>
+
+              <TextArea
+                placeholder="Quest Description"
+                value={newQuest.description}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
+              />
+
+              <TextField.Root
+                placeholder="Rewards (e.g., 100 tokens)"
+                value={newQuest.rewards}
+                onChange={(e) => handleInputChange("rewards", e.target.value)}
+              >
+                <TextField.Slot></TextField.Slot>
+              </TextField.Root>
+
+              <Select.Root
+                value={newQuest.questAction}
+                onValueChange={(value) =>
+                  handleInputChange("questAction", value as QuestAction)
+                }
+              >
+                <Select.Trigger />
+                <Select.Content>
+                  <Select.Item value="like">Like</Select.Item>
+                  <Select.Item value="comment">Comment</Select.Item>
+                  <Select.Item value="watch">Watch</Select.Item>
+                  <Select.Item value="subscribe">Subscribe</Select.Item>
+                  <Select.Item value="follow">Follow</Select.Item>
+                  <Select.Item value="join">Join</Select.Item>
+                  <Select.Item value="vote">Vote</Select.Item>
+                </Select.Content>
+              </Select.Root>
+              <Select.Root
+                value={newQuest.difficulty}
+                onValueChange={(value) =>
+                  handleInputChange("difficulty", value as QuestDifficulty)
+                }
+              >
+                <Select.Trigger />
+                <Select.Content>
+                  <Select.Item value="easy">Easy</Select.Item>
+                  <Select.Item value="medium">Medium</Select.Item>
+                  <Select.Item value="hard">Hard</Select.Item>
+                </Select.Content>
+              </Select.Root>
+              {/* <input
+                placeholder="Optional Link (e.g., https://example.com)"
+                value={newQuest.link}
+                onChange={(e) => handleInputChange("link", e.target.value)}
+              /> */}
+
+              <TextField.Root
+                placeholder="Optional Link (e.g., https://example.com)"
+                value={newQuest.link}
+                onChange={(e) => handleInputChange("link", e.target.value)}
+              >
+                <TextField.Slot></TextField.Slot>
+              </TextField.Root>
             </Flex>
 
             <Flex gap="3" mt="4" justify="end">
@@ -152,6 +209,12 @@ const Quests = () => {
                   Cancel
                 </Button>
               </Dialog.Close>
+              <Button
+                onClick={handleCreateQuest}
+                disabled={!newQuest.title || !newQuest.description}
+              >
+                Create
+              </Button>
             </Flex>
           </Dialog.Content>
         </Dialog.Root>
