@@ -9,10 +9,10 @@ class QuestDifficulty(str, Enum):
     hard = "hard"
 
 
-class QuestActionType(str, Enum):
-    watch = "watch"  # User is required to watch a video or view content
+class QuestAction(str, Enum):
     like = "like"  # User is required to like a post or content
     comment = "comment"  # User is required to leave a comment on a post or content
+    watch = "watch"  # User is required to watch a video or view content
     subscribe = (
         "subscribe"  # User is required to subscribe to a creator's channel(Youtube)
     )
@@ -29,9 +29,11 @@ class QuestActionType(str, Enum):
 
 class Quest(BaseModel):
     id: str = None
+    creatorId: str = None
+    creatorName: str = None
     title: str = None
     description: str = None
     rewards: str = None
-    actionType: QuestActionType
+    questAction: QuestAction
     difficulty: QuestDifficulty
     link: Optional[str] = None  # URL associated with the quest

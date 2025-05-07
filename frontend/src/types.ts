@@ -16,14 +16,25 @@ export type User = {
 export type userRole = "creator" | "fan";
 export type QuestDifficulty = "easy" | "medium" | "hard";
 
+export type QuestAction =
+  | "like"
+  | "comment"
+  | "watch"
+  | "subscribe"
+  | "follow"
+  | "join"
+  | "vote";
+
 export type Quest = {
   id: string;
+  creatorId: string;
+  creatorName: string;
   title: string;
   description: string;
   rewards: string;
+  questAction: QuestAction;
   difficulty: QuestDifficulty;
-  creatorId: string;
-  creatorName: string;
+  link?: string;
 };
 
 export type UpdateUser = Omit<
