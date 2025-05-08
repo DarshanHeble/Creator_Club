@@ -104,7 +104,10 @@ const Sidebar = () => {
         >
           <img
             // src="https://assets.aceternity.com/manu.png"
-            src={user?.profilePhoto || `https://api.dicebear.com/7.x/identicon/svg?seed=${user?.userName || "default"}`}
+            src={
+              user?.profilePhoto ||
+              `https://api.dicebear.com/7.x/identicon/svg?seed=${user?.userName || "default"}`
+            }
             alt="Avatar"
             className="h-10 w-10 rounded-full"
           />
