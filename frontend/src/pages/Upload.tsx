@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { Box, Button, Flex, Heading, TextArea } from "@radix-ui/themes";
 import { FaPaperclip, FaPoll } from "react-icons/fa";
+import { uploadToCloudinary } from "@services/CloudinaryServices"; // Import the Cloudinary upload function
 
 const Upload = () => {
   const [postContent, setPostContent] = useState("");
@@ -29,18 +30,33 @@ const Upload = () => {
     }
   };
 
-  const handleUpload = () => {
-    console.log("Post Created:", {
-      postContent,
-      pollQuestion,
-      pollOptions,
-      attachment,
-    });
-    setPostContent("");
-    setPollQuestion("");
-    setPollOptions([]);
-    setAttachment(null);
-    setShowPollSection(false);
+  const handleUpload = async () => {
+    try {
+      let mediaUrl = null;
+
+      // Upload the attachment to Cloudinary if it exists
+      if (attachment) {
+        mediaUrl = await uploadToCloudinary(attachment);
+        console.log("Uploaded media URL:", mediaUrl);
+      }
+
+      // Log the post data
+      console.log("Post Created:", {
+        postContent,
+        pollQuestion,
+        pollOptions,
+        mediaUrl, // Include the uploaded media URL
+      });
+
+      // Reset the form
+      setPostContent("");
+      setPollQuestion("");
+      setPollOptions([]);
+      setAttachment(null);
+      setShowPollSection(false);
+    } catch (error) {
+      console.error("Failed to upload post:", error);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
