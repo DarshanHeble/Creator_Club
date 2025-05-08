@@ -77,7 +77,7 @@ const Profile = () => {
   };
 
   const handlePhotoUpload = async () => {
-      if (!selectedPhoto) return;
+    if (!selectedPhoto) return;
 
     try {
       // Upload the photo to Cloudinary
@@ -92,13 +92,13 @@ const Profile = () => {
       // Optionally, update the user's profile photo in the backend
       if (user?.id) {
         await userService.updateUser(user.id, { profilePhoto: response });
-        toast("Profile photo updated successfully!");
+        toast.success("Profile photo updated successfully!");
       }
 
       setIsPhotoDialogOpen(false);
     } catch (error) {
       console.error("Failed to upload profile photo:", error);
-      toast("Failed to upload photo. Please try again.");
+      toast.error("Failed to upload photo. Please try again.");
     }
   };
 
@@ -111,10 +111,10 @@ const Profile = () => {
         bio: formData.bio,
       };
       await userService.updateUser(user.id, updatedData);
-      toast("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile:", error);
-      toast("Failed to update profile. Please try again.");
+      toast.error("Failed to update profile. Please try again.");
     }
   };
   const isCurrentUser = user?.id === userId; // Check if the logged-in user is the same as the profile user
