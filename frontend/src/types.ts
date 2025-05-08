@@ -39,7 +39,7 @@ export type Quest = {
 
 export type UpdateUser = Omit<
   User,
-  "id" | "walletAddress" | "password" | "role" | "profilePhoto"
+  "id" | "walletAddress" | "password" | "role"
 >;
 
 // type Wallet = {

@@ -16,6 +16,10 @@ import { FaPlus } from "react-icons/fa";
 import { Quest, QuestAction, QuestDifficulty } from "@/types";
 import { useAuth } from "@hooks/useAuth";
 
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+console.log(CLOUD_NAME, UPLOAD_PRESET);
+
 const Quests = () => {
   const { user } = useAuth();
   const { userId } = useParams();

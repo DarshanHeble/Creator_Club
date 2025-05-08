@@ -31,6 +31,7 @@ class User(BaseModel):
     userName: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None
+    profilePhoto: Optional[str] = None
     role: UserRole
     favoriteCreators: Optional[list[str]] = None
     fans: Optional[list[str]] = None

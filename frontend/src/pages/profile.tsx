@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Dialog, Flex, Heading, Text } from "@radix-ui/themes";
-import { FaEdit, FaSave } from "react-icons/fa";
+import { FaEdit, FaSave, FaPlus } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { userService } from "@services/userService";
 import { useAuth } from "@hooks/useAuth";
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@components/Loading";
-import { uploadToCloudinary } from "@services/CloudinaryServices";
+import { uploadToCloudinary } from "@services/cloud";
 
 const Profile = () => {
   const { userId } = useParams();
@@ -73,7 +73,11 @@ const Profile = () => {
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedPhoto(e.target.files[0]);
+      setIsPhotoDialogOpen(true); // Open the dialog when a photo is selected
     }
+
+    // Reset the input value to allow the user to select the same file again if needed
+    e.target.value = "";
   };
 
   const handlePhotoUpload = async () => {
@@ -87,11 +91,13 @@ const Profile = () => {
       console.log("Cloudinary Response:", response);
 
       // Update the formData with the raw response or any specific field if needed
-      setFormData({ ...formData, profilePhoto: response });
+      setFormData({ ...formData, profilePhoto: response.secure_url });
 
       // Optionally, update the user's profile photo in the backend
       if (user?.id) {
-        await userService.updateUser(user.id, { profilePhoto: response });
+        await userService.updateUser(user.id, {
+          profilePhoto: response.secure_url,
+        });
         toast.success("Profile photo updated successfully!");
       }
 
@@ -99,6 +105,7 @@ const Profile = () => {
     } catch (error) {
       console.error("Failed to upload profile photo:", error);
       toast.error("Failed to upload photo. Please try again.");
+      setIsPhotoDialogOpen(false);
     }
   };
 
@@ -154,12 +161,19 @@ const Profile = () => {
               />
             )}
             {/* Camera Icon on Hover */}
-            <div className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100">
-              <MdOutlineEdit
-                className="cursor-pointer text-2xl text-white"
-                onClick={() => setIsPhotoDialogOpen(true)}
-              />
+            <div
+              className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100"
+              onClick={() => document.getElementById("file-input")?.click()} // Trigger the file input
+            >
+              <MdOutlineEdit className="cursor-pointer text-2xl text-white" />
             </div>
+            <input
+              id="file-input"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoChange}
+            />
           </div>
 
           {/* User Info Section */}
@@ -240,18 +254,45 @@ const Profile = () => {
           <Dialog.Content className="max-w-sm p-6">
             <Dialog.Title>Update Profile Photo</Dialog.Title>
             <Dialog.Description>
-              Select a new profile photo to upload.
+              Preview and confirm your new profile photo.
             </Dialog.Description>
             <Flex direction="column" gap="4" className="mt-4">
+              {selectedPhoto && (
+                <>
+                  {/* Image Preview */}
+                  <img
+                    src={URL.createObjectURL(selectedPhoto)}
+                    alt="Selected Photo"
+                    className="mx-auto h-40 w-40 rounded-full object-cover"
+                  />
+                  {/* Image Data Display */}
+                  <div className="rounded-lg border p-4 shadow-sm">
+                    <p>
+                      <strong>File Name:</strong> {selectedPhoto.name}
+                    </p>
+                    <p>
+                      <strong>File Size:</strong>{" "}
+                      {(selectedPhoto.size / 1024).toFixed(2)} KB
+                    </p>
+                    <p>
+                      <strong>File Type:</strong> {selectedPhoto.type}
+                    </p>
+                  </div>
+                </>
+              )}
               <input
                 type="file"
                 accept="image/*"
                 onChange={handlePhotoChange}
+                className="mt-4"
               />
             </Flex>
             <Flex justify="end" className="mt-6 gap-4">
               <Dialog.Close>
-                <Button variant="ghost">Cancel</Button>
+                <Button variant="soft" color="gray">
+                  <FaPlus className="rotate-45" />
+                  Cancel
+                </Button>
               </Dialog.Close>
               <Button variant="soft" color="green" onClick={handlePhotoUpload}>
                 <FaSave />

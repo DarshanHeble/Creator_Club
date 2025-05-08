@@ -1,17 +1,10 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  Outlet,
-  useLocation,
-} from "react-router-dom";
+import "./index.css";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import DashBoard from "@pages/DashBoard";
 import Register from "@pages/Register";
 import Upload from "@pages/Upload";
 import Landing from "@pages/Landing";
-import "./index.css";
 import UserLayout from "@components/layout/UserLayout";
 import Profile from "@pages/profile";
 import Settings from "@pages/Settings";
@@ -114,7 +107,14 @@ function App() {
           </Route>
 
           {/* Fallback for undefined routes */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="*"
+            element={
+              <MotionWrapper key={location.pathname}>
+                <Navigate to="/" replace />
+              </MotionWrapper>
+            }
+          />
         </Routes>
       </AnimatePresence>
       {/* </BrowserRouter> */}
