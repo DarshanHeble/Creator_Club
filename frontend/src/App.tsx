@@ -4,6 +4,7 @@ import {
   Route,
   Navigate,
   Outlet,
+  useLocation,
 } from "react-router-dom";
 import Header from "./components/Header";
 import DashBoard from "@pages/DashBoard";
@@ -17,12 +18,30 @@ import Settings from "@pages/Settings";
 import Quests from "@pages/Quests";
 import { Toaster } from "@components/ui/sonner";
 import SearchCreators from "@pages/SearchCreators ";
+import { AnimatePresence, motion } from "framer-motion";
+import { ReactNode } from "react";
+
+const MotionWrapper = ({ children }: { children: ReactNode }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.7 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function App() {
+  const location = useLocation();
+
   return (
     <>
       <Toaster richColors />
-      <BrowserRouter>
+      {/* <BrowserRouter> */}
+      <AnimatePresence mode="wait">
         <Routes>
           {/* Public routes with header */}
           <Route
@@ -30,7 +49,9 @@ function App() {
               <>
                 <Header />
                 <div className="flex h-[calc(100vh-3.5rem)] w-full">
-                  <Outlet />
+                  <MotionWrapper>
+                    <Outlet />
+                  </MotionWrapper>
                 </div>
               </>
             }
@@ -40,18 +61,63 @@ function App() {
           </Route>
 
           {/* Protected routes with Sidebar */}
-          <Route path="/search-creators" element={<SearchCreators/>} />
           <Route path="/user/:userId" element={<UserLayout />}>
-            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route
+              index
+              element={
+                <MotionWrapper key={location.pathname}>
+                  <Navigate to="dashboard" replace />
+                </MotionWrapper>
+              }
+            />
             <Route path="upload" element={<Upload />} />
-            <Route path="dashboard" element={<DashBoard />} />
-            <Route path="quests" element={<Quests />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="search" element={<SearchCreators />} />
+            <Route
+              path="dashboard"
+              element={
+                <MotionWrapper key={location.pathname}>
+                  <DashBoard />
+                </MotionWrapper>
+              }
+            />
+            <Route
+              path="quests"
+              element={
+                <MotionWrapper key={location.pathname}>
+                  <Quests />
+                </MotionWrapper>
+              }
+            />
+            <Route
+              path="profile"
+              element={
+                <MotionWrapper key={location.pathname}>
+                  <Profile />
+                </MotionWrapper>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <MotionWrapper key={location.pathname}>
+                  <Settings />
+                </MotionWrapper>
+              }
+            />
+            <Route
+              path="search"
+              element={
+                <MotionWrapper key={location.pathname}>
+                  <SearchCreators />
+                </MotionWrapper>
+              }
+            />
           </Route>
+
+          {/* Fallback for undefined routes */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </BrowserRouter>
+      </AnimatePresence>
+      {/* </BrowserRouter> */}
     </>
   );
 }

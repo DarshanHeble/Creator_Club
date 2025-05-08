@@ -12,7 +12,7 @@ const UserLayout = () => {
   return (
     <div className="flex h-screen w-full">
       <Sidebar />
-      <div className="flex-1 overflow-y-scroll">
+      <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>
     </div>
