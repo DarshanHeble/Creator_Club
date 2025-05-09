@@ -1,8 +1,8 @@
 import "./index.css";
 import { AppRoutes } from "./AppRoutes";
-import { Toaster } from "sonner";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { useTheme } from "@components/theme/ThemeProvider";
+import { Toaster } from "@components/ui/sonner";
 
 const APP_ID = import.meta.env.VITE_PRIVY_APP_ID;
 
