@@ -33,7 +33,7 @@ class Quest(BaseModel):
     creatorName: str = None
     title: str = None
     description: str = None
-    rewards: str = None
+    rewards: int = None
     questAction: QuestAction
     difficulty: QuestDifficulty
     link: Optional[str] = None  # URL associated with the quest

@@ -15,6 +15,8 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { Quest, QuestAction, QuestDifficulty } from "@/types";
 import { useAuth } from "@hooks/useAuth";
+import { questService } from "@services/questService";
+import { v4 as createId } from "uuid";
 
 const Quests = () => {
   const { user } = useAuth();
@@ -26,7 +28,7 @@ const Quests = () => {
     title: "",
     description: "",
     rewards: "",
-    questAction: "like" as QuestAction,
+    questAction: "subscribe" as QuestAction,
     difficulty: "easy" as QuestDifficulty,
     link: "",
   });
@@ -42,25 +44,28 @@ const Quests = () => {
     setNewQuest({ ...newQuest, [key]: value });
   };
 
-  const handleCreateQuest = () => {
+  const handleCreateQuest = async (): Promise<void> => {
     if (!user) return;
 
     const quest: Quest = {
-      id: crypto.randomUUID(),
+      id: createId(),
       creatorId: user.id,
       creatorName: user.userName || user.email || "Unknown Creator",
       ...newQuest,
     };
+
+    await questService.createQuest(user.id, quest);
 
     setSelectedQuests([...selectedQuests, quest]);
     setNewQuest({
       title: "",
       description: "",
       rewards: "",
-      questAction: "like",
+      questAction: "subscribe",
       difficulty: "easy",
       link: "",
     });
+
     setIsModalOpen(false);
   };
 
@@ -151,7 +156,8 @@ const Quests = () => {
               />
 
               <TextField.Root
-                placeholder="Rewards (e.g., 100 tokens)"
+                placeholder="Rewards (e.g., 10 tokens)"
+                type="number"
                 value={newQuest.rewards}
                 onChange={(e) => handleInputChange("rewards", e.target.value)}
               >
@@ -159,20 +165,21 @@ const Quests = () => {
               </TextField.Root>
 
               <Select.Root
-                value={newQuest.questAction}
+                // value={newQuest.questAction}
                 onValueChange={(value) =>
                   handleInputChange("questAction", value as QuestAction)
                 }
+                defaultValue="subscribe"
               >
                 <Select.Trigger />
                 <Select.Content>
-                  <Select.Item value="like">Like</Select.Item>
-                  <Select.Item value="comment">Comment</Select.Item>
-                  <Select.Item value="watch">Watch</Select.Item>
                   <Select.Item value="subscribe">Subscribe</Select.Item>
-                  <Select.Item value="follow">Follow</Select.Item>
                   <Select.Item value="join">Join</Select.Item>
-                  <Select.Item value="vote">Vote</Select.Item>
+                  <Select.Item value="like">Like</Select.Item>
+                  {/* <Select.Item value="comment">Comment</Select.Item> */}
+                  {/* <Select.Item value="watch">Watch</Select.Item> */}
+                  {/* <Select.Item value="vote">Vote</Select.Item> */}
+                  {/* <Select.Item value="follow">Follow</Select.Item> */}
                 </Select.Content>
               </Select.Root>
               <Select.Root

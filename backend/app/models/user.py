@@ -36,5 +36,5 @@ class User(BaseModel):
     favoriteCreators: Optional[list[str]] = None
     fans: Optional[list[str]] = None
     websiteURL: Optional[str] = None
-    quests: Optional[list[Quest]] = None
+    quests: Optional[list[str]] = None
     completedQuests: Optional[list[str]] = None
