@@ -32,7 +32,7 @@ export const ThemeSwitcher = () => {
           sideOffset={5}
         >
           <DropdownMenu.Item
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
+            className="flex cursor-pointer items-center justify-start gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
             onSelect={() => setTheme("light")}
           >
             <BsSun size={14} />
@@ -46,7 +46,7 @@ export const ThemeSwitcher = () => {
             Dark
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
+            className="flex cursor-pointer items-center justify-start gap-2 rounded px-2 py-1.5 text-sm text-black outline-none hover:bg-zinc-100 dark:text-white dark:hover:bg-zinc-700"
             onSelect={() => setTheme("system")}
           >
             <BsDisplay size={14} />

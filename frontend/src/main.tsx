@@ -7,7 +7,6 @@ import "./index.css";
 import { Theme } from "@radix-ui/themes";
 // import { ThemeProvider } from "next-themes";
 
-import { PrivyProvider } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@components/theme/ThemeProvider.tsx";
 import { BrowserRouter } from "react-router-dom";

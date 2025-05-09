@@ -74,9 +74,9 @@ function Landing() {
               scene="https://prod.spline.design/0tinqLr4b8UmLGHR/scene.splinecode"
               onLoad={() => setIsSplineLoaded(true)} // Trigger animation after loading
             />
+            <div className="absolute right-0 bottom-0 z-20 h-[4rem] w-[12rem] bg-white dark:bg-[#121113]"></div>
           </motion.div>
         </Suspense>
-        <div className="fixed top-[88.5vh] left-[87vw] z-20 h-[4rem] w-[12rem] bg-white dark:bg-[#121113]"></div>
       </div>
     </div>
   );
