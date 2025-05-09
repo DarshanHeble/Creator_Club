@@ -2,10 +2,9 @@ import axios from "axios";
 
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
 const API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
 const API_SECRET = import.meta.env.VITE_CLOUDINARY_API_SECRET;
-// const CLOUD_NAME = "dl9z7nduj";
-// const UPLOAD_PRESET = "CCloud";
 
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
 const CLOUDINARY_DESTROY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/destroy`;

@@ -16,6 +16,8 @@ const Profile = () => {
   const { user, authenticated, ready } = useAuth();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     // Check if the user is authenticated
     // If not, redirect to the login page
@@ -38,7 +40,7 @@ const Profile = () => {
   // Fetch user data using react-query
   const {
     data: fetchedUser,
-    isLoading,
+    isLoading: isUserLoading,
     error,
   } = useQuery(
     {
@@ -51,7 +53,6 @@ const Profile = () => {
       enabled: !!userId,
     }, // Ensure the query is only triggered if userId exists
   );
-  console.log(fetchedUser, "Fetched User Data");
 
   useEffect(() => {
     if (fetchedUser) {
@@ -82,6 +83,7 @@ const Profile = () => {
 
   const handlePhotoUpload = async () => {
     if (!selectedPhoto) return;
+    setIsLoading(true);
 
     try {
       // Upload the photo to Cloudinary
@@ -100,12 +102,13 @@ const Profile = () => {
         });
         toast.success("Profile photo updated successfully!");
       }
-
       setIsPhotoDialogOpen(false);
     } catch (error) {
       console.error("Failed to upload profile photo:", error);
       toast.error("Failed to upload photo. Please try again.");
       setIsPhotoDialogOpen(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -128,7 +131,7 @@ const Profile = () => {
 
   const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${formData.userName || "default"}`;
 
-  if (isLoading)
+  if (isUserLoading)
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader />
@@ -289,12 +292,17 @@ const Profile = () => {
             </Flex>
             <Flex justify="end" className="mt-6 gap-4">
               <Dialog.Close>
-                <Button variant="soft" color="gray">
+                <Button variant="soft" color="gray" disabled={isLoading}>
                   <FaPlus className="rotate-45" />
                   Cancel
                 </Button>
               </Dialog.Close>
-              <Button variant="soft" color="green" onClick={handlePhotoUpload}>
+              <Button
+                variant="soft"
+                color="green"
+                onClick={handlePhotoUpload}
+                loading={isLoading}
+              >
                 <FaSave />
                 Upload
               </Button>

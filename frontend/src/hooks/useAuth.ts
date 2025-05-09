@@ -18,7 +18,7 @@ export const useAuth = () => {
     queryFn: async () => {
       if (!privyUser?.id) return null;
       const userData = await userService.getUser(privyUser.id);
-      console.log(userData);
+      // console.log(userData);
 
       return userData;
     },

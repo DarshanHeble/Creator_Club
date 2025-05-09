@@ -15,7 +15,7 @@ class UserUpdate(BaseModel):
     email: Optional[str] = None
     websiteURL: Optional[str] = None
     profilePhoto: Optional[str] = None
-    favouriteCreators: Optional[list[str]] = None
+    favoriteCreators: Optional[list[str]] = None
 
 
 router = APIRouter()
