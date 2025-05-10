@@ -1,15 +1,24 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
-from app.models.post import Post
+from app.firebase import db
 
 router = APIRouter()
 
-# Mock database
-posts_db = {}
-
-@router.get("/posts/{user_id}", response_model=List[Post])
+@router.get("/posts/{user_id}")
 async def get_user_posts(user_id: str):
-    user_posts = [post for post in posts_db.values() if post["user_id"] == user_id]
-    if not user_posts:
-        raise HTTPException(status_code=404, detail="No posts found for this user")
-    return user_posts
+    try:
+        # Query Firestore for posts by user_id
+        posts_ref = db.collection("posts").where("user_id", "==", user_id)
+        docs = posts_ref.stream()
+
+        posts = []
+        for doc in docs:
+            post = doc.to_dict()
+            post["id"] = doc.id  # Include the document ID
+            posts.append(post)
+
+        if not posts:
+            raise HTTPException(status_code=404, detail="No posts found for this user")
+
+        return posts
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching posts: {str(e)}")

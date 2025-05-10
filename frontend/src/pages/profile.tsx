@@ -31,7 +31,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/posts/${userId}`);
+        const response = await fetch(`http://127.0.0.1:8000/posts/${userId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
         }
@@ -335,7 +335,7 @@ const Profile = () => {
           align={"left"}
           className="mb-6 text-center text-lg font-bold text-zinc-800 dark:text-zinc-200"
         >
-          Posts
+          User Posts
         </Heading>
         <Flex wrap="wrap" gap="6" justify="center">
           {posts.map((post) => (
