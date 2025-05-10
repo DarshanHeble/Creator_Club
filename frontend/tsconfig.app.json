@@ -43,6 +43,12 @@
       "@services/*": [
         "src/services/*"
       ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [

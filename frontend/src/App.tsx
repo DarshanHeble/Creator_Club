@@ -1,37 +1,35 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Header from "./components/Header";
-import DashBoard from "@pages/DashBoard";
-import Register from "@pages/Register";
-import Landing from "@pages/Landing";
-// import VideoPlayerPage from "@pages/VideoPlayerPage";
 import "./index.css";
-import UserLayout from "@components/layout/UserLayout";
-import Profile from "@pages/profile";
-import Settings from "@pages/Settings";
-import Quests from "@pages/Quests";
+import { AppRoutes } from "./AppRoutes";
+import { PrivyProvider } from "@privy-io/react-auth";
+import { useTheme } from "@components/theme/ThemeProvider";
+import { Toaster } from "@components/ui/sonner";
+
+const APP_ID = import.meta.env.VITE_PRIVY_APP_ID;
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Header />
-      <div className="flex h-[calc(100vh-3.5rem)] w-full">
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Register />} />
+  const { currentTheme } = useTheme();
 
-          {/* Protected routes with sidebar */}
-          <Route path="/user/:userId" element={<UserLayout />}>
-            <Route index element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard" element={<DashBoard />} />
-            <Route path="quests" element={<Quests />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
-            {/* <Route path="/video" element={<VideoPlayerPage />} /> */}
-          </Route>
-        </Routes>
-      </div>
-    </BrowserRouter>
+  return (
+    <PrivyProvider
+      appId={APP_ID}
+      // clientId=""
+      config={{
+        appearance: {
+          theme: currentTheme,
+          landingHeader: "Log in or sign up to Creator CLub", // Defaults to 'Log in or sign up'
+          showWalletLoginFirst: true,
+        },
+        // Create embedded wallets for users who don't have a wallet
+        embeddedWallets: {
+          createOnLogin: "users-without-wallets",
+        },
+      }}
+    >
+      <>
+        <Toaster richColors />
+        <AppRoutes />
+      </>
+    </PrivyProvider>
   );
 }
 

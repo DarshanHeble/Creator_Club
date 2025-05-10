@@ -1,18 +1,69 @@
-import { useState } from "react";
-import { Box, Button, Flex, Heading, Text, Avatar } from "@radix-ui/themes";
-import { FaEdit, FaSave } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { Box, Button, Dialog, Flex, Heading, Text } from "@radix-ui/themes";
+import { FaEdit, FaSave, FaPlus } from "react-icons/fa";
+import { MdOutlineEdit } from "react-icons/md";
+import { userService } from "@services/userService";
+import { useAuth } from "@hooks/useAuth";
+import { toast } from "sonner";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "@components/Loading";
+import { uploadToCloudinary } from "@services/cloud";
 
 const Profile = () => {
-  const [isEditing, setIsEditing] = useState(false);
+  const { userId } = useParams();
+
+  const { user, authenticated, ready } = useAuth();
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is authenticated
+    // If not, redirect to the login page
+    if (!authenticated && ready) {
+      navigate("/");
+    }
+  }, [authenticated, navigate, ready]);
+
   const [formData, setFormData] = useState({
-    userName: "John Doe",
-    email: "johndoe@example.com",
-    role: "Creator",
-    bio: "Passionate creator connecting with fans worldwide.",
-    followers: 334,
-    following: 442,
-    posts: 4,
+    userName: "",
+    email: "",
+    bio: "",
+    profilePhoto: "",
   });
+
+  const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [posts] = useState([]); // State to store posts
+
+  // Fetch user data using react-query
+  const {
+    data: fetchedUser,
+    isLoading: isUserLoading,
+    error,
+  } = useQuery(
+    {
+      queryKey: ["user", userId],
+      queryFn: async () => {
+        if (!userId) return null;
+        const userData = await userService.getUser(userId);
+        return userData;
+      },
+      enabled: !!userId,
+    }, // Ensure the query is only triggered if userId exists
+  );
+
+  useEffect(() => {
+    if (fetchedUser) {
+      setFormData({
+        userName: fetchedUser.userName || "",
+        email: fetchedUser.email || "",
+        bio: fetchedUser.bio || "",
+        profilePhoto: fetchedUser.profilePhoto || "",
+      });
+    }
+  }, [fetchedUser]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -20,129 +71,266 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedPhoto(e.target.files[0]);
+      setIsPhotoDialogOpen(true); // Open the dialog when a photo is selected
+    }
+
+    // Reset the input value to allow the user to select the same file again if needed
+    e.target.value = "";
   };
 
-  const handleSave = () => {
-    console.log("Saved data:", formData);
-    setIsEditing(false);
+  const handlePhotoUpload = async () => {
+    if (!selectedPhoto) return;
+    setIsLoading(true);
+
+    try {
+      // Upload the photo to Cloudinary
+      const response = await uploadToCloudinary(selectedPhoto);
+
+      // Log the full response if needed
+      console.log("Cloudinary Response:", response);
+
+      // Update the formData with the raw response or any specific field if needed
+      setFormData({ ...formData, profilePhoto: response.secure_url });
+
+      // Optionally, update the user's profile photo in the backend
+      if (user?.id) {
+        await userService.updateUser(user.id, {
+          profilePhoto: response.secure_url,
+        });
+        toast.success("Profile photo updated successfully!");
+      }
+      setIsPhotoDialogOpen(false);
+    } catch (error) {
+      console.error("Failed to upload profile photo:", error);
+      toast.error("Failed to upload photo. Please try again.");
+      setIsPhotoDialogOpen(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
-  // profile
+
+  const handleSave = async () => {
+    if (!user?.id) return;
+    try {
+      const updatedData = {
+        userName: formData.userName,
+        email: formData.email,
+        bio: formData.bio,
+      };
+      await userService.updateUser(user.id, updatedData);
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast.error("Failed to update profile. Please try again.");
+    }
+  };
+  const isCurrentUser = user?.id === userId; // Check if the logged-in user is the same as the profile user
+
+  const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${formData.userName || "default"}`;
+
+  if (isUserLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader />
+      </div>
+    );
+  if (error) return <Text>Failed to load user data</Text>;
+
   return (
     <Flex
       direction="column"
-      className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 dark:from-neutral-800 dark:to-neutral-900"
+      align="center"
+      justify="center"
+      className="min-h-screen p-6"
     >
-      {/* Profile Section */}
-      <Box className="mx-auto w-full max-w-4xl rounded-lg bg-white p-8 shadow-xl dark:bg-zinc-900">
-        <Flex direction="column" align="center" gap="6">
-          {/* Profile Picture */}
-          <Avatar
-            style={{ width: 200, height: 150 }}
-            src={`https://api.dicebear.com/7.x/identicon/svg?seed=${formData.userName}`}
-            fallback={
-              <span className="text-3xl font-bold">{formData.userName[0]}</span>
-            } // Adjusted font size for fallback
-            className="rounded-full bg-zinc-100 dark:bg-zinc-800"
-          />
-
-          {/* User Information */}
-          <Heading
-            size="4"
-            className="text-center text-2xl font-bold text-zinc-800 dark:text-zinc-200"
-          >
-            {formData.userName}
-          </Heading>
-          <Text className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-            {formData.email}
-          </Text>
-          <Text className="text-center text-sm text-blue-500">
-            {formData.role}
-          </Text>
-
-          {/* Followers, Following, and Posts */}
-          <Flex gap="8" className="mt-4">
-            <Box className="text-center">
-              <Text className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-                {formData.posts}
-              </Text>
-              <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-                Posts
-              </Text>
-            </Box>
-            <Box className="text-center">
-              <Text className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-                {formData.followers}
-              </Text>
-              <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-                Followers
-              </Text>
-            </Box>
-            <Box className="text-center">
-              <Text className="text-lg font-bold text-zinc-800 dark:text-zinc-200">
-                {formData.following}
-              </Text>
-              <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-                Following
-              </Text>
-            </Box>
-          </Flex>
-
-          {/* Bio Section */}
-          <Box className="w-full">
-            <label
-              htmlFor="bio"
-              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Bio
-            </label>
-            {isEditing ? (
-              <textarea
-                id="bio"
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
+      <Box className="w-full max-w-4xl rounded-lg p-8 shadow-xl dark:bg-zinc-900">
+        <Flex direction="row" align="center" gap="6">
+          {/* Profile Photo Section */}
+          <div className="relative h-36 w-36">
+            {formData.profilePhoto ? (
+              <img
+                src={formData.profilePhoto}
+                alt="Profile"
+                className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <Text className="text-sm text-zinc-600 dark:text-zinc-400">
-                {formData.bio}
-              </Text>
+              <img
+                src={avatarUrl}
+                alt="Generated Avatar"
+                className="h-full w-full rounded-full object-cover"
+              />
             )}
-          </Box>
+            {/* Camera Icon on Hover */}
+            <div
+              className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 hover:opacity-100"
+              onClick={() => document.getElementById("file-input")?.click()} // Trigger the file input
+            >
+              <MdOutlineEdit className="cursor-pointer text-2xl text-white" />
+            </div>
+            <input
+              id="file-input"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoChange}
+            />
+          </div>
 
-          {/* Edit/Save Button */}
-          <Button
-            variant="soft"
-            color={isEditing ? "green" : "blue"}
-            className="flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-            onClick={isEditing ? handleSave : handleEditToggle}
-          >
-            {isEditing ? <FaSave /> : <FaEdit />}
-            {isEditing ? "Save" : "Edit Profile"}
-          </Button>
+          {/* User Info Section */}
+          <Flex direction="column" align="center" gap="2">
+            <Heading size="4">{formData.userName || "No Username"}</Heading>
+            <Text>{formData.email || "No Email"}</Text>
+            <Text>{formData.bio || "No Bio"}</Text>
+          </Flex>
+
+          {/* Edit Info Dialog */}
+          {isCurrentUser && (
+            <Dialog.Root>
+              <Dialog.Trigger>
+                <Button variant="soft" color="blue" className="mt-4">
+                  <FaEdit />
+                  Edit Profile
+                </Button>
+              </Dialog.Trigger>
+              <Dialog.Content className="max-w-md p-6">
+                <Dialog.Title>Edit Profile</Dialog.Title>
+                <Dialog.Description>
+                  Update your profile information below.
+                </Dialog.Description>
+                <Flex direction="column" gap="4" className="mt-4">
+                  <label>
+                    Username
+                    <input
+                      type="text"
+                      name="userName"
+                      value={formData.userName}
+                      onChange={handleChange}
+                      className="w-full rounded border p-2 dark:bg-zinc-800"
+                    />
+                  </label>
+                  <label>
+                    Email
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full rounded border p-2 dark:bg-zinc-800"
+                    />
+                  </label>
+                  <label>
+                    Bio
+                    <textarea
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleChange}
+                      className="w-full rounded border p-2 dark:bg-zinc-800"
+                    />
+                  </label>
+                </Flex>
+                <Flex justify="end" className="mt-6 gap-4">
+                  <Dialog.Close>
+                    <Button variant="soft">Cancel</Button>
+                  </Dialog.Close>
+                  <Dialog.Close>
+                    <Button variant="soft" color="green" onClick={handleSave}>
+                      <FaSave />
+                      Save
+                    </Button>
+                  </Dialog.Close>
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
+          )}
         </Flex>
       </Box>
 
-      {/* Post Section */}
-      <Box className="mt-8 flex-1 overflow-y-auto p-4">
+      {/* Profile Photo Dialog */}
+      {isPhotoDialogOpen && (
+        <Dialog.Root
+          open={isPhotoDialogOpen}
+          onOpenChange={setIsPhotoDialogOpen}
+        >
+          <Dialog.Content className="max-w-sm p-6">
+            <Dialog.Title>Update Profile Photo</Dialog.Title>
+            <Dialog.Description>
+              Preview and confirm your new profile photo.
+            </Dialog.Description>
+            <Flex direction="column" gap="4" className="mt-4">
+              {selectedPhoto && (
+                <>
+                  {/* Image Preview */}
+                  <img
+                    src={URL.createObjectURL(selectedPhoto)}
+                    alt="Selected Photo"
+                    className="mx-auto h-40 w-40 rounded-full object-cover"
+                  />
+                  {/* Image Data Display */}
+                  <div className="rounded-lg border p-4 shadow-sm">
+                    <p>
+                      <strong>File Name:</strong> {selectedPhoto.name}
+                    </p>
+                    <p>
+                      <strong>File Size:</strong>{" "}
+                      {(selectedPhoto.size / 1024).toFixed(2)} KB
+                    </p>
+                    <p>
+                      <strong>File Type:</strong> {selectedPhoto.type}
+                    </p>
+                  </div>
+                </>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="mt-4"
+              />
+            </Flex>
+            <Flex justify="end" className="mt-6 gap-4">
+              <Dialog.Close>
+                <Button variant="soft" color="gray" disabled={isLoading}>
+                  <FaPlus className="rotate-45" />
+                  Cancel
+                </Button>
+              </Dialog.Close>
+              <Button
+                variant="soft"
+                color="green"
+                onClick={handlePhotoUpload}
+                loading={isLoading}
+              >
+                <FaSave />
+                Upload
+              </Button>
+            </Flex>
+          </Dialog.Content>
+        </Dialog.Root>
+      )}
+
+      {/* Posts Section */}
+      <Box className="mt-8 w-full max-w-4xl flex-1 rounded-lg bg-white p-4 shadow-xl dark:bg-zinc-900">
         <Heading
           size="4"
-          className="mb-4 text-center text-lg font-bold text-zinc-800 dark:text-zinc-200"
+          align={"left"}
+          className="mb-6 text-center text-lg font-bold text-zinc-800 dark:text-zinc-200"
         >
           Posts
         </Heading>
-        <Flex wrap="wrap" gap="4" justify="center">
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
-          <Box className="aspect-square w-1/3 rounded-lg bg-gray-300 dark:bg-zinc-700"></Box>
+        <Flex wrap="wrap" gap="6" justify="center">
+          {posts.map((post, index) => (
+            <Box
+              key={index}
+              className="aspect-square w-1/3 overflow-hidden rounded-lg bg-gray-300 shadow-md transition-transform duration-300 hover:scale-105 dark:bg-zinc-700"
+            >
+              <Text className="p-4 text-sm text-zinc-800 dark:text-zinc-200">
+                {post.content || "No Content"}
+              </Text>
+            </Box>
+          ))}
         </Flex>
       </Box>
     </Flex>

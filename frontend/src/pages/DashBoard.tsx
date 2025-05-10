@@ -1,30 +1,20 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Grid,
-  Heading,
-  Text,
-} from "@radix-ui/themes";
-// import { Account } from "@components/Account";
-// import { useAccount, useDisconnect } from "wagmi";
-import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
-import { FaPowerOff, FaPlay } from "react-icons/fa";
+import { Box, Button, Flex, Grid, Heading, Text } from "@radix-ui/themes";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { FaPowerOff, FaPlay, FaSearch } from "react-icons/fa";
 
 // Import local images
 import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
-import { useLogout } from "@privy-io/react-auth";
+import { useAuth } from "@hooks/useAuth";
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {
-  // const { isConnected } = useAccount();
-  // const { disconnect } = useDisconnect();
-  const { logout } = useLogout();
+  const { user, authenticated, logout } = useAuth();
   const navigate = useNavigate();
+
+  // console.log(user, authenticated);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<{
@@ -32,11 +22,13 @@ const DashBoard = () => {
     url: string;
   } | null>(null);
 
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     navigate("/login");
-  //   }
-  // }, [isConnected, navigate]);
+  useEffect(() => {
+    // Check if the user is authenticated
+    // If not, redirect to the login page
+    if (!authenticated) {
+      navigate("/user/");
+    }
+  }, [authenticated, navigate]);
 
   const openVideoPage = (video: {
     title: string;
@@ -82,13 +74,21 @@ const DashBoard = () => {
   };
 
   return (
-    <Container>
+    <div className="container mx-auto p-8">
+      {/* Search Bar */}
+      <div
+        onClick={() => navigate(`/user/${user?.id}/search`)} // Or replace with <Link href="/search"> for Next.js
+        className="flex w-full max-w-4xl cursor-pointer items-center rounded-lg border border-zinc-200 bg-white px-4 py-2 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+      >
+        <FaSearch className="mr-2 text-zinc-500 dark:text-zinc-400" />
+        <span className="w-full bg-transparent text-sm text-zinc-800 placeholder-zinc-500 focus:outline-none dark:text-zinc-200 dark:placeholder-zinc-400">
+          Search for creators...
+        </span>
+      </div>
       <Flex direction="column" gap="6" className="relative py-8">
         {/* Main Dashboard Content */}
         <Flex justify="between" align="center">
-          <Heading>
-            <Link to="/dashboard">Dashboard</Link>
-          </Heading>
+          <Heading>Dashboard</Heading>
           <Button
             variant="soft"
             color="red"
@@ -106,10 +106,40 @@ const DashBoard = () => {
         {/* Account Information */}
         <Grid columns="2" gap="4">
           <Box className="rounded-lg border border-zinc-200 bg-white p-6 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-            <Text className="mb-4 text-zinc-600 dark:text-zinc-400">
+            <Heading className="mb-4 text-zinc-600 dark:text-zinc-400">
               Your Account Information
-            </Text>
-            {/* <Account /> */}
+            </Heading>
+            <br />
+            <Box>
+              <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                Name:
+              </Text>{" "}
+              <Text className="mb-2 text-zinc-800 dark:text-zinc-200">
+                {user?.userName || "No Username"}
+              </Text>
+              <br />
+              <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                Email:
+              </Text>{" "}
+              <Text className="mb-4 text-zinc-800 dark:text-zinc-200">
+                {user?.email || "No Email"}
+              </Text>
+            </Box>
+
+            {/* Wallet Information */}
+            <Box className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+              <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                Wallet Address:
+              </Text>{" "}
+              <Text className="mb-2 text-zinc-800 dark:text-zinc-200">
+                {user?.walletAddress || "No Wallet Address"}
+              </Text>
+              <br />
+              <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                Balance:
+              </Text>{" "}
+              <Text className="text-zinc-800 dark:text-zinc-200">null </Text>
+            </Box>
           </Box>
         </Grid>
 
@@ -167,7 +197,7 @@ const DashBoard = () => {
           </div>
         </div>
       )}
-    </Container>
+    </div>
   );
 };
 

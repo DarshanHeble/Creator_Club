@@ -1,14 +1,18 @@
 import Sidebar from "@components/layout/Sidebar";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, Navigate } from "react-router-dom";
 
 const UserLayout = () => {
   const { userId } = useParams();
-  console.log(userId);
+
+  // Redirect to landing page if userId is undefined
+  if (!userId) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
-    <div className="flex h-full w-full">
+    <div className="flex h-screen w-full">
       <Sidebar />
-      <div className="flex-1 overflow-y-scroll">
+      <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>
     </div>

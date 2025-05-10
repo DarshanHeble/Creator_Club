@@ -1,19 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios for API calls
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
-// import { userService } from "@services/userService";
-
-const createUser = async (data: {
-  userName: string;
-  email: string;
-  password: string;
-  walletAddress: string;
-  isCreator: boolean;
-}) => {
-  return axios.post("/users", data);
-};
+import { userService } from "@services/userService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -46,14 +36,18 @@ const Register = () => {
       // Hash the password before sending it to the backend
       const hashedPassword = await bcrypt.hash(formData.password, 10);
 
+      // Generate a unique user ID
+      const userId = uuidv4();
+
       // Send the data to the backend
-      // await userService.updateUser({
-      //   userName: formData.userName,
-      //   email: formData.email,
-      //   password: hashedPassword,
-      //   walletAddress: "",
-      //   role: "fan",
-      // });
+      await userService.createUser({
+        id: userId,
+        walletAddress: "", // Provide a default or generated wallet address
+        userName: formData.userName,
+        email: formData.email,
+        password: hashedPassword,
+        role: "fan", // Default role is "fan"
+      });
 
       // Redirect to the login page after successful registration
       navigate("/login");
@@ -68,23 +62,23 @@ const Register = () => {
       direction="column"
       align="center"
       justify="center"
-      className="h-screen bg-gradient-to-br from-blue-100 to-blue-300 dark:from-neutral-800 dark:to-neutral-900"
+      className="h-screen bg-gradient-to-br from-blue-100 to-blue-300 dark:from-neutral-800 dark:to-neutral-900 p-4"
     >
-      <Box className="w-full max-w-lg rounded-lg bg-white p-8 shadow-xl dark:bg-zinc-900">
+      <Box className="w-full max-w-md rounded-lg bg-white p-8 shadow-2xl dark:bg-zinc-900">
         <Heading
           size="4"
-          className="mb-6 text-center text-2xl font-bold text-zinc-800 dark:text-zinc-200"
+          className="mb-6 text-center text-3xl font-bold text-zinc-800 dark:text-zinc-200"
         >
-          Register
+          Create Your Account
         </Heading>
         {error && (
-          // <Text className="mb-4 text-center text-sm text-red-500 bg-red-100 border border-red-500 p-3 rounded-lg dark:bg-red-900">
-          <Text className="mb-4 rounded-lg bg-red-100 p-2 text-center text-sm text-red-500 dark:bg-red-900">
+          <Text className="mb-4 rounded-lg bg-red-100 p-3 text-center text-sm font-medium text-red-600 dark:bg-red-900 dark:text-red-400">
             {error}
           </Text>
         )}
         <form onSubmit={handleSubmit}>
-          <Flex direction="column" gap="5">
+          <Flex direction="column" gap="6">
+            {/* Username Input */}
             <div>
               <label
                 htmlFor="userName"
@@ -103,13 +97,15 @@ const Register = () => {
                 className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
+
+            {/* Email Input */}
             <div>
               <label
                 htmlFor="email"
                 className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
               >
                 Email
-              </label>
+              </label>  
               <input
                 type="email"
                 id="email"
@@ -121,6 +117,8 @@ const Register = () => {
                 className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
+
+            {/* Password Input */}
             <div>
               <label
                 htmlFor="password"
@@ -139,16 +137,20 @@ const Register = () => {
                 className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
+
+            {/* Submit Button */}
             <Button
               type="submit"
               variant="soft"
               color="blue"
-              className="w-full rounded-lg bg-blue-500 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-neutral-800"
+              className="w-full rounded-lg bg-blue-500 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-neutral-800"
             >
               Register
             </Button>
           </Flex>
         </form>
+
+        {/* Login Redirect */}
         <Text className="mt-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
           Already have an account?{" "}
           <Button
