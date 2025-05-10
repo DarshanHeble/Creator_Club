@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, UploadFile, Form
 from typing import List, Optional
 # import cloudinary.uploader  # Ensure Cloudinary Python SDK is installed
 
-
 router = APIRouter()
 
 @router.post("/posts")
@@ -31,7 +30,6 @@ async def create_post(
         # Handle media upload to Cloudinary
         if media:
             try:
-                # Upload the file to Cloudinary
                 upload_result = cloudinary.uploader.upload(
                     media.file,  # Pass the file object
                     folder="posts",  # Specify the folder in Cloudinary

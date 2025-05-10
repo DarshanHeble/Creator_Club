@@ -17,7 +17,8 @@ from app.routes.users import (
     get_fans_by_creator_router,
 )
 from app.routes.quests import *
-
+# from app.routes.posts.create_post import router as create_post_router
+from app.routes.posts import create_post_router
 
 # Initialize FastAPI application instance
 app = FastAPI()
@@ -60,3 +61,6 @@ app.include_router(create_quest_router, prefix="/quest", tags=["quest"])
 app.include_router(complete_quest_router, prefix="/quest", tags=["quest"])
 app.include_router(get_quests_router, prefix="/quest", tags=["quest"])
 app.include_router(delete_quest_router, prefix="/quest", tags=["quest"])
+
+# Mount post-related routers
+app.include_router(create_post_router, prefix="/posts", tags=["Posts"])

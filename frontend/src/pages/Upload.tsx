@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
 import { Box, Button, Flex, Heading, TextArea } from "@radix-ui/themes";
 import { FaPaperclip, FaPoll } from "react-icons/fa";
-import { uploadToCloudinary } from "@services/CloudinaryServices"; // Import the Cloudinary upload function
+import { uploadToCloudinary } from "@services/cloud"; // Import the Cloudinary upload function
+import { createPost } from "@services/postService";
 
 const Upload = () => {
   const [postContent, setPostContent] = useState("");
@@ -32,21 +33,15 @@ const Upload = () => {
 
   const handleUpload = async () => {
     try {
-      let mediaUrl = null;
-
-      // Upload the attachment to Cloudinary if it exists
-      if (attachment) {
-        mediaUrl = await uploadToCloudinary(attachment);
-        console.log("Uploaded media URL:", mediaUrl);
-      }
-
-      // Log the post data
-      console.log("Post Created:", {
+      // Call the backend service to create the post
+      const result = await createPost({
         postContent,
         pollQuestion,
         pollOptions,
-        mediaUrl, // Include the uploaded media URL
+        attachment,
       });
+
+      console.log("Post created successfully:", result);
 
       // Reset the form
       setPostContent("");
