@@ -17,19 +17,17 @@ from app.routes.users import (
     get_fans_by_creator_router,
 )
 from app.routes.quests import *
-# from app.routes.posts.create_post import router as create_post_router
-from app.routes.posts import create_post_router
+from app.routes.posts.create_post import router as create_post_router
+from app.routes.posts.update_post import router as update_post_router
+from app.routes.posts.delete_post import router as delete_post_router
 
 # Initialize FastAPI application instance
 app = FastAPI()
 
-frontend_url = "http://localhost:5173"
-
-# Configure CORS middleware
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    # allow_origins=[frontend_url],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,4 +61,6 @@ app.include_router(get_quests_router, prefix="/quest", tags=["quest"])
 app.include_router(delete_quest_router, prefix="/quest", tags=["quest"])
 
 # Mount post-related routers
-app.include_router(create_post_router, prefix="/posts", tags=["Posts"])
+app.include_router(create_post_router, prefix="/api", tags=["Posts"])
+app.include_router(update_post_router, prefix="/api", tags=["Posts"])
+app.include_router(delete_post_router, prefix="/api", tags=["Posts"])

@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@components/Loading";
 import { uploadToCloudinary } from "@services/cloud";
+import { createPost } from "@services/postService";
 
 const Profile = () => {
   const { userId } = useParams();
@@ -17,6 +18,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [posts, setPosts] = useState([]); // State to store posts
 
   useEffect(() => {
     // Check if the user is authenticated
@@ -25,6 +27,22 @@ const Profile = () => {
       navigate("/");
     }
   }, [authenticated, navigate, ready]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/posts/${userId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts");
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPosts();
+  }, [userId]);
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -35,7 +53,6 @@ const Profile = () => {
 
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
-  const [posts] = useState([]); // State to store posts
 
   // Fetch user data using react-query
   const {
@@ -321,14 +338,21 @@ const Profile = () => {
           Posts
         </Heading>
         <Flex wrap="wrap" gap="6" justify="center">
-          {posts.map((post, index) => (
+          {posts.map((post) => (
             <Box
-              key={index}
+              key={post.id}
               className="aspect-square w-1/3 overflow-hidden rounded-lg bg-gray-300 shadow-md transition-transform duration-300 hover:scale-105 dark:bg-zinc-700"
             >
               <Text className="p-4 text-sm text-zinc-800 dark:text-zinc-200">
                 {post.content || "No Content"}
               </Text>
+              {post.media_url && (
+                <img
+                  src={post.media_url}
+                  alt="Post Media"
+                  className="h-full w-full object-cover"
+                />
+              )}
             </Box>
           ))}
         </Flex>
