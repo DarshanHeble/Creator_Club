@@ -8,6 +8,7 @@ import {
   Grid,
   Heading,
   Select,
+  Skeleton,
   Text,
   TextArea,
   TextField,
@@ -17,25 +18,40 @@ import { Quest, QuestAction, QuestDifficulty } from "@/types";
 import { useAuth } from "@hooks/useAuth";
 import { questService } from "@services/questService";
 import { v4 as createId } from "uuid";
+import { useQuery } from "@tanstack/react-query";
 
 const Quests = () => {
   const { user } = useAuth();
   const { userId } = useParams();
   const [isCreator, setIsCreator] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedQuests, setSelectedQuests] = useState<Quest[]>([]);
+  const [questList, setQuestList] = useState<Quest[]>([]);
   const [newQuest, setNewQuest] = useState({
     title: "",
     description: "",
-    rewards: "",
+    rewards: 0,
     questAction: "subscribe" as QuestAction,
     difficulty: "easy" as QuestDifficulty,
     link: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsCreator(user?.id === userId);
   }, [user, userId]);
+
+  const { isFetching: isFetching } = useQuery({
+    queryKey: ["quests", userId],
+    queryFn: async () => {
+      if (!user) return [];
+      console.log("Fetching quests for userId:", userId);
+
+      const response = await questService.getQuests(userId!);
+      setQuestList(response || []);
+      return response; // Assuming `getQuests` returns an array of quests
+    },
+    enabled: !!userId, // Ensure query runs only if userId is available
+  });
 
   const handleInputChange = (
     key: keyof typeof newQuest,
@@ -47,6 +63,8 @@ const Quests = () => {
   const handleCreateQuest = async (): Promise<void> => {
     if (!user) return;
 
+    setIsLoading(true);
+
     const quest: Quest = {
       id: createId(),
       creatorId: user.id,
@@ -54,19 +72,39 @@ const Quests = () => {
       ...newQuest,
     };
 
-    await questService.createQuest(user.id, quest);
+    // Optimistic Update
+    setQuestList((prevList) => [...prevList, quest]);
 
-    setSelectedQuests([...selectedQuests, quest]);
+    try {
+      await questService.createQuest(user.id, quest);
+
+      // Reset new quest form
+      resetNewQuest();
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error creating quest:", error);
+
+      // Rollback optimistic update
+      setQuestList((prevList) => prevList.filter((q) => q.id !== quest.id));
+
+      // Optionally, show error notification to the user
+      // Example: toast.error("Failed to create quest. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper function to reset the form
+  const resetNewQuest = () => {
     setNewQuest({
       title: "",
       description: "",
-      rewards: "",
+      rewards: 0,
       questAction: "subscribe",
       difficulty: "easy",
       link: "",
     });
-
-    setIsModalOpen(false);
   };
 
   const getDifficultyColor = (difficulty: Quest["difficulty"]) => {
@@ -97,42 +135,89 @@ const Quests = () => {
         )}
       </Flex>
 
-      {/* Quest Grid */}
-      <Grid columns="3" gap="4" className="mt-6">
-        {selectedQuests.map((quest) => (
-          <Box
-            key={quest.id}
-            className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
-          >
-            <Text className="mb-2 font-semibold">{quest.title}</Text> <br />
-            <Text className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-              {quest.description}
-            </Text>
-            <Flex direction="column" gap="2">
-              {/* <Text className="text-sm text-zinc-500 dark:text-zinc-400">
-                Created by {quest.creatorName}
-              </Text> */}
-              <Flex justify="between" align="center">
-                <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  {quest.rewards}
+      {isFetching ? (
+        <Grid columns="3" gap="4" className="mt-6">
+          {/* Grid is now the top-level component for the loading state */}
+          {[1, 2, 3].map((num) => (
+            <Box
+              key={num}
+              className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+            >
+              {/* Use Skeleton to wrap each piece of content that needs a placeholder */}
+              <Skeleton>
+                <Text as="div" className="mb-2 font-semibold">
+                  Loading Title...
                 </Text>
+              </Skeleton>
+              <Skeleton>
                 <Text
-                  className={`rounded-full px-2 py-1 text-xs font-medium ${getDifficultyColor(
-                    quest.difficulty,
-                  )}`}
+                  as="div"
+                  className="mb-1 text-sm text-zinc-600 dark:text-zinc-400"
                 >
-                  {quest.difficulty}
+                  Loading description line one...
                 </Text>
+              </Skeleton>
+              <Skeleton>
+                <Text
+                  as="div"
+                  className="mb-4 text-sm text-zinc-600 dark:text-zinc-400"
+                >
+                  And another line for description...
+                </Text>
+              </Skeleton>
+              <Flex direction="column" gap="2">
+                <Flex justify="between" align="center">
+                  <Skeleton>
+                    <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                      Rewards
+                    </Text>
+                  </Skeleton>
+                  <Skeleton>
+                    <Text
+                      className={`rounded-full px-2 py-1 text-xs font-medium`}
+                    >
+                      Difficulty
+                    </Text>
+                  </Skeleton>
+                </Flex>
               </Flex>
-            </Flex>
-          </Box>
-        ))}
-      </Grid>
+            </Box>
+          ))}
+        </Grid>
+      ) : (
+        <Grid columns="3" gap="4" className="mt-6">
+          {questList.map((quest) => (
+            <Box
+              key={quest.id}
+              className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+            >
+              <Text className="mb-2 font-semibold">{quest.title}</Text> <br />
+              <Text className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
+                {quest.description}
+              </Text>
+              <Flex direction="column" gap="2">
+                <Flex justify="between" align="center">
+                  <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                    {quest.rewards}
+                  </Text>
+                  <Text
+                    className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${getDifficultyColor(
+                      quest.difficulty,
+                    )}`}
+                  >
+                    {quest.difficulty}
+                  </Text>
+                </Flex>
+              </Flex>
+            </Box>
+          ))}
+        </Grid>
+      )}
 
       {/* Create Quest Modal */}
       {isCreator && (
         <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <Dialog.Content>
+          <Dialog.Content onSubmit={handleCreateQuest}>
             <Dialog.Title>Create a New Quest</Dialog.Title>
             <Dialog.Description mb="4">
               Fill in the details to create a new quest for your fans.
@@ -195,11 +280,6 @@ const Quests = () => {
                   <Select.Item value="hard">Hard</Select.Item>
                 </Select.Content>
               </Select.Root>
-              {/* <input
-                placeholder="Optional Link (e.g., https://example.com)"
-                value={newQuest.link}
-                onChange={(e) => handleInputChange("link", e.target.value)}
-              /> */}
 
               <TextField.Root
                 placeholder="Optional Link (e.g., https://example.com)"
@@ -218,7 +298,9 @@ const Quests = () => {
               </Dialog.Close>
               <Button
                 onClick={handleCreateQuest}
+                type="submit"
                 disabled={!newQuest.title || !newQuest.description}
+                loading={isLoading}
               >
                 Create
               </Button>

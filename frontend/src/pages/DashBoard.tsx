@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Grid, Heading, Text } from "@radix-ui/themes";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Heading,
+  Skeleton,
+  Text,
+} from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaPowerOff, FaPlay, FaSearch } from "react-icons/fa";
@@ -8,13 +16,14 @@ import thumbnail1 from "@assets/What is.jpg";
 import thumbnail2 from "@assets/What is.jpg";
 import thumbnail3 from "@assets/What is.jpg";
 import { useAuth } from "@hooks/useAuth";
+import getBalance from "@services/getBalance";
+import { useQuery } from "@tanstack/react-query";
+
 const defaultThumbnail = "@assets/default-thumbnail.png";
 
 const DashBoard = () => {
   const { user, authenticated, logout } = useAuth();
   const navigate = useNavigate();
-
-  // console.log(user, authenticated);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<{
@@ -29,6 +38,18 @@ const DashBoard = () => {
       navigate("/user/");
     }
   }, [authenticated, navigate]);
+
+  const { data: walletBalance, isLoading: isBalanceLoading } = useQuery({
+    queryKey: ["balance", user?.walletAddress],
+    queryFn: async () => {
+      if (user?.walletAddress) {
+        const balance = await getBalance(user.walletAddress);
+        return balance;
+      }
+      return null;
+    },
+    enabled: !!user?.walletAddress,
+  });
 
   const openVideoPage = (video: {
     title: string;
@@ -129,16 +150,23 @@ const DashBoard = () => {
             {/* Wallet Information */}
             <Box className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800">
               <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                Wallet Address:
-              </Text>{" "}
+                Wallet Address:{" "}
+              </Text>
               <Text className="mb-2 text-zinc-800 dark:text-zinc-200">
                 {user?.walletAddress || "No Wallet Address"}
               </Text>
               <br />
               <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                Balance:
-              </Text>{" "}
-              <Text className="text-zinc-800 dark:text-zinc-200">null </Text>
+                Balance:{" "}
+              </Text>
+              <Text className="mb-2 text-zinc-800 dark:text-zinc-200">
+                {isBalanceLoading ? (
+                  <Skeleton> Loading... </Skeleton>
+                ) : (
+                  walletBalance
+                )}{" "}
+                ETH
+              </Text>
             </Box>
           </Box>
         </Grid>

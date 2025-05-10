@@ -9,7 +9,7 @@ export type User = {
   profilePhoto?: string;
   favoriteCreators?: string[];
   websiteURL?: string;
-  quests?: Quest[];
+  quests?: string[];
   completedQuests?: string[];
 };
 
