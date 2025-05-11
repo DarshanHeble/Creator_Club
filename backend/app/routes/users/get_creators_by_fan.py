@@ -37,7 +37,7 @@ async def get_creators_by_fan(fan_id: str):
             )
 
         # Get all creators followed by the fan
-        creators_ids = fan_data.get("favouriteCreators", [])
+        creators_ids = fan_data.get("favoriteCreators", [])
         if not creators_ids:
             return []  # Return an empty list if no creators are followed
 

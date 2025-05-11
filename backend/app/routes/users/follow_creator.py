@@ -42,13 +42,13 @@ async def follow_creator(fan_id: str, creator_id: str):
         if creator_data["role"] != UserRole.creator.value:
             raise HTTPException(status_code=400, detail="Target user must have the role 'creator'")
 
-        # Update the fan's favouriteCreators list
-        favorite_creators = fan_data.get("favouriteCreators", [])
+        # Update the fan's favoriteCreators list
+        favorite_creators = fan_data.get("favoriteCreators", [])
         if creator_id in favorite_creators:
             raise HTTPException(status_code=400, detail="Fan is already following this creator")
 
         favorite_creators.append(creator_id)
-        fan_ref.update({"favouriteCreators": favorite_creators})
+        fan_ref.update({"favoriteCreators": favorite_creators})
 
         return {"message": f"Fan with id {fan_id} is now following creator with id {creator_id}"}
 
