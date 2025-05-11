@@ -43,13 +43,13 @@ async def unfollow_creator(fan_id: str, creator_id: str):
         if creator_data["role"] != UserRole.creator.value:
             raise HTTPException(status_code=400, detail="Target user must have the role 'creator'")
 
-        # Update the fan's favouriteCreators list
-        favorite_creators = fan_data.get("favouriteCreators", [])
+        # Update the fan's favoriteCreators list
+        favorite_creators = fan_data.get("favoriteCreators", [])
         if creator_id not in favorite_creators:
             raise HTTPException(status_code=400, detail="Fan is not following this creator")
 
         favorite_creators.remove(creator_id)
-        fan_ref.update({"favouriteCreators": favorite_creators})
+        fan_ref.update({"favoriteCreators": favorite_creators})
 
         return {"message": f"Fan with id {fan_id} has unfollowed creator with id {creator_id}"}
 
