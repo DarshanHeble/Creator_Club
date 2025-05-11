@@ -2,12 +2,10 @@ import { Quest } from "@/types";
 import api from "./api";
 
 export const questService = {
-  async createQuest(creatorId: string, quest: Quest): Promise<Quest> {
+  async createQuest(quest: Quest): Promise<Quest> {
     try {
-      const response = await api.post<Quest>("quest/create-quest", {
-        creatorId,
-        quest,
-      });
+      const response = await api.post<Quest>(`quest/create-quest`, quest);
+
       return response.data;
     } catch (error) {
       console.error(error);

@@ -30,8 +30,8 @@ export type Quest = {
   creatorId: string;
   creatorName: string;
   title: string;
-  description: string;
-  rewards: number;
+  description?: string;
+  rewards: string;
   questAction: QuestAction;
   difficulty: QuestDifficulty;
   link?: string;

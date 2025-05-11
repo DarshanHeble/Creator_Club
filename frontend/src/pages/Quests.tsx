@@ -70,13 +70,16 @@ const Quests = () => {
       creatorId: user.id,
       creatorName: user.userName || user.email || "Unknown Creator",
       ...newQuest,
+      rewards: newQuest.rewards.toString(),
     };
 
     // Optimistic Update
     setQuestList((prevList) => [...prevList, quest]);
 
     try {
-      await questService.createQuest(user.id, quest);
+      console.log(quest);
+
+      await questService.createQuest(quest);
 
       // Reset new quest form
       resetNewQuest();
@@ -261,9 +264,9 @@ const Quests = () => {
                   <Select.Item value="subscribe">Subscribe</Select.Item>
                   <Select.Item value="join">Join</Select.Item>
                   <Select.Item value="like">Like</Select.Item>
-                  {/* <Select.Item value="comment">Comment</Select.Item> */}
-                  {/* <Select.Item value="watch">Watch</Select.Item> */}
-                  {/* <Select.Item value="vote">Vote</Select.Item> */}
+                  <Select.Item value="comment">Comment</Select.Item>
+                  <Select.Item value="watch">Watch</Select.Item>
+                  <Select.Item value="vote">Vote</Select.Item>
                   {/* <Select.Item value="follow">Follow</Select.Item> */}
                 </Select.Content>
               </Select.Root>

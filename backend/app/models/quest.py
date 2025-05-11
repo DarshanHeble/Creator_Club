@@ -28,12 +28,12 @@ class QuestAction(str, Enum):
 
 
 class Quest(BaseModel):
-    id: str = None
-    creatorId: str = None
-    creatorName: str = None
-    title: str = None
-    description: str = None
-    rewards: int = None
+    id: Optional[str] = None
+    creatorId: str
+    creatorName: str
+    title: str
+    description: Optional[str] = None
+    rewards: str
     questAction: QuestAction
     difficulty: QuestDifficulty
     link: Optional[str] = None  # URL associated with the quest
