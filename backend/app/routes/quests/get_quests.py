@@ -6,6 +6,7 @@ import logging
 
 # Initialize logging
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)  # Adjust logging level as needed
 
 router = APIRouter()
 
@@ -21,29 +22,34 @@ async def get_quests(creator_id: str):
         creator_doc = creator_ref.get()
 
         if not creator_doc.exists:
+            logger.error(f"Creator with ID {creator_id} not found in the database.")
             raise HTTPException(status_code=404, detail="Creator not found")
 
+        # Extract the creator's data and the `quests` field
         creator_data = creator_doc.to_dict()
         quest_ids = creator_data.get("quests", [])
 
-        if not quest_ids:
-            raise HTTPException(
-                status_code=404, detail="No quests found for this creator"
-            )
+        if not isinstance(quest_ids, list) or not quest_ids:
+            logger.info(f"No quests found for creator {creator_id}.")
+            return []  # Return an empty list if no quests exist
 
         # Fetch quests from the `quests` collection
         quests = []
         for quest_id in quest_ids:
-            quest_doc = db.collection("quests").document(quest_id).get()
-            if quest_doc.exists:
-                quests.append(quest_doc.to_dict())
-            else:
-                logger.warning(f"Quest with ID {quest_id} not found in the database.")
+            try:
+                quest_doc = db.collection("quests").document(quest_id).get()
+                if quest_doc.exists:
+                    quests.append(quest_doc.to_dict())
+                else:
+                    logger.warning(
+                        f"Quest with ID {quest_id} not found in the database."
+                    )
+            except Exception as quest_error:
+                logger.error(f"Error fetching quest {quest_id}: {quest_error}")
 
         if not quests:
-            raise HTTPException(
-                status_code=404, detail="No valid quests found for this creator"
-            )
+            logger.info(f"No valid quests found for creator {creator_id}.")
+            return []  # Return an empty list if no valid quests are found
 
         return quests
 
