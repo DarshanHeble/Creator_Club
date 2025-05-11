@@ -20,6 +20,7 @@ import { useAuth } from "@hooks/useAuth";
 import { questService } from "@services/questService";
 import { v4 as createId } from "uuid";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const Quests = () => {
   const { user } = useAuth();
@@ -81,6 +82,7 @@ const Quests = () => {
       console.log(quest);
 
       await questService.createQuest(quest);
+      toast.success("Quest created successfully!");
 
       // Reset new quest form
       resetNewQuest();
@@ -88,6 +90,7 @@ const Quests = () => {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error creating quest:", error);
+      toast.error("Failed to create quest. Please try again.");
 
       // Rollback optimistic update
       setQuestList((prevList) => prevList.filter((q) => q.id !== quest.id));
@@ -120,13 +123,10 @@ const Quests = () => {
     try {
       await questService.deleteQuest(user.id, questId);
       // Optionally, show success notification
-      // Example: toast.success("Quest deleted successfully!");
+      toast.success("Quest deleted successfully!");
     } catch (error) {
       console.error("Error deleting quest:", error);
-      // Rollback optimistic update if deletion fails
-      // This might involve re-fetching the quest list or adding the quest back
-      // For simplicity, we'll rely on the next fetch to correct the list if needed.
-      // Example: toast.error("Failed to delete quest. Please try again.");
+      toast.error("Failed to delete quest. Please try again.");
       // Re-fetch quests to ensure consistency if deletion fails
       // refetch(); // if using refetch from useQuery
     }
