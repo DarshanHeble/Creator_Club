@@ -1,7 +1,7 @@
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { Avatar, Button } from "@radix-ui/themes";
 import { useAuth } from "@hooks/useAuth";
-// import logo from "/CCLogo.svg";
+import logo from "@assets/logo.jpg"; // Update to the new logo file
 
 const Header = () => {
   const { ready, authenticated, login } = useAuth();
@@ -10,7 +10,7 @@ const Header = () => {
     <div className="relative">
       <div className="flex h-14 items-center justify-between bg-zinc-50 px-4 py-2 dark:bg-zinc-900">
         <Avatar
-           src={"@assets/logo.svg"}
+          src={logo} // Update to the new logo file
           radius="full"
           size={"4"}
           fallback="CC"
