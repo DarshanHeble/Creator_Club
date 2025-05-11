@@ -3,7 +3,6 @@ from google.cloud import firestore
 from app.firebase import db
 from app.models.user import Quest
 import logging
-import uuid
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

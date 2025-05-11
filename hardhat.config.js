@@ -5,7 +5,9 @@ module.exports = {
   networks: {
     soneium: {
       url: "https://rpc.minato.soneium.org", // Temporary public RPC
-      accounts: ["f84430dd5c00cf608dc653be79f894731781553fda04e19c97f1a56e45795966"],
+      accounts: [
+        "12f0f4c1115b1f9cb77fd70eff3e7fec092f3c4775e016018cd2e8ce740e3312",
+      ],
       chainId: 1946,
     },
   },
