@@ -1,6 +1,6 @@
+from google.cloud import firestore
 from fastapi import APIRouter, HTTPException
 from app.firebase import db
-from app.models.user import Quest
 import logging
 import uuid
 
@@ -30,7 +30,7 @@ async def delete_quest(creator_id: str, quest_id: str):
         quest_ref.delete()
 
         # Remove the quest ID from the creator's quest list
-        creator_ref.update({"quests": db.ArrayRemove([quest_id])})
+        creator_ref.update({"quests": firestore.ArrayRemove([quest_id])})
 
         logger.info(f"Quest '{quest_id}' deleted by creator '{creator_id}'.")
         return {"detail": f"Quest '{quest_id}' deleted successfully."}

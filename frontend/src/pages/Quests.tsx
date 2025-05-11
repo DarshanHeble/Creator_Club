@@ -12,8 +12,9 @@ import {
   Text,
   TextArea,
   TextField,
+  IconButton,
 } from "@radix-ui/themes";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import { Quest, QuestAction, QuestDifficulty } from "@/types";
 import { useAuth } from "@hooks/useAuth";
 import { questService } from "@services/questService";
@@ -110,6 +111,26 @@ const Quests = () => {
     });
   };
 
+  const handleDeleteQuest = async (questId: string): Promise<void> => {
+    if (!user || !isCreator) return;
+
+    // Optimistic Update: Remove the quest from the list immediately
+    setQuestList((prevList) => prevList.filter((q) => q.id !== questId));
+
+    try {
+      await questService.deleteQuest(user.id, questId);
+      // Optionally, show success notification
+      // Example: toast.success("Quest deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting quest:", error);
+      // Rollback optimistic update if deletion fails
+      // This might involve re-fetching the quest list or adding the quest back
+      // For simplicity, we'll rely on the next fetch to correct the list if needed.
+      // Example: toast.error("Failed to delete quest. Please try again.");
+      // Re-fetch quests to ensure consistency if deletion fails
+      // refetch(); // if using refetch from useQuery
+    }
+  };
   const getDifficultyColor = (difficulty: Quest["difficulty"]) => {
     switch (difficulty) {
       case "easy":
@@ -192,9 +213,26 @@ const Quests = () => {
           {questList.map((quest) => (
             <Box
               key={quest.id}
-              className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+              className="relative rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
             >
-              <Text className="mb-2 font-semibold">{quest.title}</Text> <br />
+              {isCreator && (
+                <IconButton
+                  size="1"
+                  variant="soft"
+                  color="red"
+                  onClick={() => handleDeleteQuest(quest.id)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: "1rem",
+                    right: "1rem",
+                  }}
+                >
+                  <FaTrash />
+                </IconButton>
+              )}
+              <Text className="mb-2 pr-8 font-semibold">{quest.title}</Text>{" "}
+              <br />
               <Text className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
                 {quest.description}
               </Text>
